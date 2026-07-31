@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { session } from "@web/session";
+import { user } from "@web/core/user";
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class CliffsHomeScreen extends Component {
@@ -19,7 +19,7 @@ export class CliffsHomeScreen extends Component {
         this.state = useState({ loadingAppId: null });
         this.branding = useState({ color: "", opacity: 100, hasImage: false });
 
-        const companyId = session.user_companies?.current_company;
+        const companyId = user.activeCompany?.id;
         this.backgroundImageUrl = companyId
             ? `/web/image/res.company/${companyId}/cliffs_home_background_image`
             : "";
