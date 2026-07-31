@@ -109,7 +109,7 @@
                 <separator/>
                 <filter string="Overdue" name="overdue"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_closed', '=', False)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Queue" name="group_by_queue" context="{'group_by': 'queue_id'}"/>
                     <filter string="Stage" name="group_by_stage" context="{'group_by': 'stage_id'}"/>
                     <filter string="Priority" name="group_by_priority" context="{'group_by': 'priority_id'}"/>

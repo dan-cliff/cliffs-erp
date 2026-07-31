@@ -33,7 +33,7 @@ class HelpdeskTicket(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Contact', tracking=True)
     partner_company_id = fields.Many2one(
-        'res.partner', string='Company', tracking=True,
+        'res.partner', string='Customer Company', tracking=True,
         compute='_compute_partner_company_id', store=True, readonly=False,
         domain=[('is_company', '=', True)])
     partner_email = fields.Char(string='Email')
