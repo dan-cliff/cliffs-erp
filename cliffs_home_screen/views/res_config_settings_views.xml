@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.cliffs.home.screen</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='general_settings']" position="inside">
+                <block title="Branding" name="cliffs_home_screen_branding_setting_container">
+                    <setting id="cliffs_home_background_color_setting"
+                             string="Home Screen Background Color"
+                             help="Fallback color for the custom home screen background">
+                        <field name="cliffs_home_background_color" widget="color"/>
+                    </setting>
+                    <setting id="cliffs_home_background_image_setting"
+                             string="Home Screen Background Image"
+                             help="Optional image shown over the background color, scaled to cover the screen">
+                        <field name="cliffs_home_background_image" widget="image"
+                               class="o_setting_image"
+                               options="{'size': [0, 200], 'convert_to_webp': True}"/>
+                    </setting>
+                    <setting id="cliffs_home_background_opacity_setting"
+                             string="Background Image Opacity"
+                             help="How visible the background image is over the background color"
+                             invisible="not cliffs_home_background_image">
+                        <field name="cliffs_home_background_opacity"/> %
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

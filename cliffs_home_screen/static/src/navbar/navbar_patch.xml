@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_navbar_apps_menu')]/Dropdown" position="replace">
+            <button data-hotkey="h" title="Home" class="dropdown-toggle o_cliffs_home_icon"
+                    t-on-click="() => this.onCliffsHomeClick()">
+                <i class="oi oi-apps"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

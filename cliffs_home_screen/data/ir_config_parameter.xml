@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- The stock default is too low for the Branding settings' background
+         image upload (a modest few-MB image already trips it, bundled with
+         the rest of the General Settings form in the same save request). -->
+    <record id="max_file_upload_size_param" model="ir.config_parameter">
+        <field name="key">web.max_file_upload_size</field>
+        <field name="value">67108864</field>
+    </record>
+</odoo>

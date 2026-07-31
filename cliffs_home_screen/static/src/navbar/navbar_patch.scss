@@ -1,0 +1,5 @@
+// The Home icon reuses .dropdown-toggle for the navbar's own height/background
+// styling, but it isn't an actual dropdown - drop the caret it brings along.
+.o_navbar_apps_menu .o_cliffs_home_icon.dropdown-toggle::after {
+    display: none;
+}
