@@ -2,12 +2,12 @@
     'name': 'Cliffs Home Screen',
     'version': '19.0.1.0.0',
     'category': 'Extra Tools',
-    'summary': 'Custom home screen listing installed apps with drill-down navigation',
+    'summary': 'Custom home screen showing installed apps as an icon grid',
     'description': """
 Replaces the default Odoo home screen with a custom one that lists every
-installed app (top-level, non-archived menus with no Parent Menu) and lets
-users expand each app inline to browse its menu structure and jump straight
-to a feature, without leaving the home screen.
+installed app (top-level, non-archived menus with no Parent Menu) as an
+icon grid, in the style of Odoo's standard app switcher. The top navbar's
+app-switcher icon opens this home screen instead of its usual dropdown.
 """,
     'author': 'Cliffs',
     'license': 'LGPL-3',
@@ -17,7 +17,7 @@ to a feature, without leaving the home screen.
     ],
     'assets': {
         'web.assets_backend': [
-            'cliffs_home_screen/static/src/home_screen/**/*',
+            'cliffs_home_screen/static/src/**/*',
         ],
     },
     'post_init_hook': '_set_home_screen_as_default_action',

@@ -58,18 +58,8 @@
 }
 
 .o_cliffs_app_icon_default {
-    display: none;
     font-size: 30px;
     color: var(--o-brand-primary, #714B67);
-}
-
-.o_cliffs_app_icon_fallback {
-    .o_cliffs_app_icon_img {
-        display: none;
-    }
-    .o_cliffs_app_icon_default {
-        display: block;
-    }
 }
 
 .o_cliffs_app_icon_loading {
