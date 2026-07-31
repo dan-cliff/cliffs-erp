@@ -1,6 +1,6 @@
 {
     'name': 'Cliffs Home Screen',
-    'version': '19.0.1.3.0',
+    'version': '19.0.1.4.0',
     'category': 'Extra Tools',
     'summary': 'Custom home screen showing installed apps as an icon grid',
     'description': """

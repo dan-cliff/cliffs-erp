@@ -16,7 +16,8 @@
                              string="Home Screen Background Image"
                              help="Optional image shown over the background color, scaled to cover the screen">
                         <field name="cliffs_home_background_image" widget="image"
-                               class="o_setting_image" options="{'size': [0, 200]}"/>
+                               class="o_setting_image"
+                               options="{'size': [0, 200], 'convert_to_webp': True}"/>
                     </setting>
                     <setting id="cliffs_home_background_opacity_setting"
                              string="Background Image Opacity"
