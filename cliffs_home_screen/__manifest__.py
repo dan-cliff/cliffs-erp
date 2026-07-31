@@ -1,6 +1,6 @@
 {
     'name': 'Cliffs Home Screen',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Extra Tools',
     'summary': 'Custom home screen showing installed apps as an icon grid',
     'description': """
@@ -14,6 +14,7 @@ app-switcher icon opens this home screen instead of its usual dropdown.
     'depends': ['base', 'base_setup', 'web'],
     'data': [
         'data/home_screen_action.xml',
+        'data/ir_config_parameter.xml',
         'views/res_config_settings_views.xml',
     ],
     'assets': {
