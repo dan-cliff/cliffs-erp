@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="cliffs_home_screen.HomeScreen">
+        <div class="o_cliffs_home_screen">
+            <div class="o_cliffs_home_screen_header">
+                <h2>Apps</h2>
+            </div>
+            <div t-if="state.apps.length" class="o_cliffs_home_screen_grid">
+                <MenuNode t-foreach="state.apps" t-as="app" t-key="app.id" menu="app" level="0"/>
+            </div>
+            <div t-else="" class="o_cliffs_home_screen_empty">
+                No apps installed yet.
+            </div>
+        </div>
+    </t>
+</templates>

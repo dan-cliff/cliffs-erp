@@ -1,0 +1,98 @@
+.o_cliffs_home_screen {
+    height: 100%;
+    overflow: auto;
+    padding: 24px 32px;
+    background-color: var(--o-view-background-color, #fff);
+
+    .o_cliffs_home_screen_header h2 {
+        margin-bottom: 16px;
+        font-weight: 500;
+    }
+
+    .o_cliffs_home_screen_empty {
+        color: var(--o-gray-500, #adb5bd);
+    }
+
+    .o_cliffs_home_screen_grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        align-items: start;
+    }
+}
+
+.o_cliffs_menu_node {
+    &.o_cliffs_menu_node_level_0 {
+        border: 1px solid var(--o-gray-300, #dee2e6);
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: var(--o-view-background-color, #fff);
+
+        > .o_cliffs_menu_node_row {
+            padding: 14px 16px;
+            font-weight: 500;
+        }
+
+        &.o_cliffs_menu_node_open > .o_cliffs_menu_node_row {
+            border-bottom: 1px solid var(--o-gray-200, #e9ecef);
+        }
+    }
+
+    &:not(.o_cliffs_menu_node_level_0) {
+        > .o_cliffs_menu_node_row {
+            padding: 8px 12px;
+        }
+
+        > .o_cliffs_menu_node_children {
+            padding-left: 16px;
+        }
+    }
+}
+
+.o_cliffs_menu_node_row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        background-color: var(--o-gray-100, #f8f9fa);
+    }
+}
+
+.o_cliffs_menu_node_icon_wrap {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_cliffs_menu_node_icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.o_cliffs_menu_node_icon_fallback {
+    font-size: 20px;
+    color: var(--o-brand-primary, #714B67);
+}
+
+.o_cliffs_menu_node_name {
+    flex: 1 1 auto;
+}
+
+.o_cliffs_menu_node_caret {
+    font-size: 12px;
+    color: var(--o-gray-500, #adb5bd);
+    flex: 0 0 auto;
+}
+
+.o_cliffs_menu_node_loading {
+    padding: 8px 12px;
+    color: var(--o-gray-500, #adb5bd);
+}
