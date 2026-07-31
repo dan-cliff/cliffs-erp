@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="helpdesk_ticket_source_email" model="helpdesk.ticket.source">
+        <field name="name">Email</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="helpdesk_ticket_source_phone" model="helpdesk.ticket.source">
+        <field name="name">Phone</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="helpdesk_ticket_source_chat" model="helpdesk.ticket.source">
+        <field name="name">Chat</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="helpdesk_ticket_source_web_form" model="helpdesk.ticket.source">
+        <field name="name">Web Form</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="helpdesk_ticket_source_other" model="helpdesk.ticket.source">
+        <field name="name">Other</field>
+        <field name="sequence">50</field>
+    </record>
+</odoo>

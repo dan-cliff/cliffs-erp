@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="helpdesk_menu_root" name="Helpdesk"
+              web_icon="cliffs_helpdesk,static/description/icon.png"
+              groups="cliffs_helpdesk.group_helpdesk_user"
+              sequence="60"/>
+
+    <menuitem id="helpdesk_menu_tickets" name="Tickets"
+              parent="helpdesk_menu_root"
+              action="helpdesk_ticket_action"
+              sequence="10"/>
+
+    <menuitem id="helpdesk_menu_queues" name="Queues"
+              parent="helpdesk_menu_root"
+              action="helpdesk_queue_action"
+              groups="cliffs_helpdesk.group_helpdesk_manager"
+              sequence="20"/>
+
+    <menuitem id="helpdesk_menu_configuration" name="Configuration"
+              parent="helpdesk_menu_root"
+              groups="cliffs_helpdesk.group_helpdesk_manager"
+              sequence="90"/>
+
+    <menuitem id="helpdesk_menu_stages" name="Stages"
+              parent="helpdesk_menu_configuration"
+              action="helpdesk_ticket_stage_action"
+              sequence="10"/>
+
+    <menuitem id="helpdesk_menu_priorities" name="Priorities"
+              parent="helpdesk_menu_configuration"
+              action="helpdesk_ticket_priority_action"
+              sequence="20"/>
+
+    <menuitem id="helpdesk_menu_types" name="Types"
+              parent="helpdesk_menu_configuration"
+              action="helpdesk_ticket_type_action"
+              sequence="30"/>
+
+    <menuitem id="helpdesk_menu_sources" name="Sources"
+              parent="helpdesk_menu_configuration"
+              action="helpdesk_ticket_source_action"
+              sequence="40"/>
+
+    <menuitem id="helpdesk_menu_tags" name="Tags"
+              parent="helpdesk_menu_configuration"
+              action="helpdesk_tag_action"
+              sequence="50"/>
+</odoo>

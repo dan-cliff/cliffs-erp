@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="helpdesk_ticket_priority_low" model="helpdesk.ticket.priority">
+        <field name="name">Low</field>
+        <field name="sequence">10</field>
+        <field name="color">4</field>
+    </record>
+    <record id="helpdesk_ticket_priority_medium" model="helpdesk.ticket.priority">
+        <field name="name">Medium</field>
+        <field name="sequence">20</field>
+        <field name="color">3</field>
+    </record>
+    <record id="helpdesk_ticket_priority_high" model="helpdesk.ticket.priority">
+        <field name="name">High</field>
+        <field name="sequence">30</field>
+        <field name="color">2</field>
+    </record>
+    <record id="helpdesk_ticket_priority_urgent" model="helpdesk.ticket.priority">
+        <field name="name">Urgent</field>
+        <field name="sequence">40</field>
+        <field name="color">1</field>
+    </record>
+</odoo>
