@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_helpdesk" model="ir.module.category">
+        <field name="name">Helpdesk</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="group_helpdesk_user" model="res.groups">
+        <field name="name">Agent</field>
+        <field name="category_id" ref="module_category_helpdesk"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_helpdesk_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_helpdesk"/>
+        <field name="implied_ids" eval="[(4, ref('cliffs_helpdesk.group_helpdesk_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Agents only see tickets in queues they belong to, or assigned to them -->
+    <record id="helpdesk_ticket_rule_agent" model="ir.rule">
+        <field name="name">Helpdesk Ticket: agents see their queues</field>
+        <field name="model_id" ref="model_helpdesk_ticket"/>
+        <field name="domain_force">['|', ('user_id', '=', user.id), ('queue_id.agent_ids', 'in', [user.id])]</field>
+        <field name="groups" eval="[(4, ref('cliffs_helpdesk.group_helpdesk_user'))]"/>
+    </record>
+
+    <record id="helpdesk_ticket_rule_manager" model="ir.rule">
+        <field name="name">Helpdesk Ticket: managers see everything</field>
+        <field name="model_id" ref="model_helpdesk_ticket"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('cliffs_helpdesk.group_helpdesk_manager'))]"/>
+    </record>
+
+    <record id="helpdesk_ticket_rule_company" model="ir.rule">
+        <field name="name">Helpdesk Ticket: multi-company</field>
+        <field name="model_id" ref="model_helpdesk_ticket"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="helpdesk_queue_rule_company" model="ir.rule">
+        <field name="name">Helpdesk Queue: multi-company</field>
+        <field name="model_id" ref="model_helpdesk_queue"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

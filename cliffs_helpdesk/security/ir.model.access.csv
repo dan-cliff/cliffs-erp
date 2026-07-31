@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_helpdesk_ticket_user,helpdesk.ticket.user,model_helpdesk_ticket,group_helpdesk_user,1,1,1,0
+access_helpdesk_ticket_manager,helpdesk.ticket.manager,model_helpdesk_ticket,group_helpdesk_manager,1,1,1,1
+access_helpdesk_queue_user,helpdesk.queue.user,model_helpdesk_queue,group_helpdesk_user,1,0,0,0
+access_helpdesk_queue_manager,helpdesk.queue.manager,model_helpdesk_queue,group_helpdesk_manager,1,1,1,1
+access_helpdesk_ticket_stage_user,helpdesk.ticket.stage.user,model_helpdesk_ticket_stage,group_helpdesk_user,1,0,0,0
+access_helpdesk_ticket_stage_manager,helpdesk.ticket.stage.manager,model_helpdesk_ticket_stage,group_helpdesk_manager,1,1,1,1
+access_helpdesk_ticket_priority_user,helpdesk.ticket.priority.user,model_helpdesk_ticket_priority,group_helpdesk_user,1,0,0,0
+access_helpdesk_ticket_priority_manager,helpdesk.ticket.priority.manager,model_helpdesk_ticket_priority,group_helpdesk_manager,1,1,1,1
+access_helpdesk_ticket_type_user,helpdesk.ticket.type.user,model_helpdesk_ticket_type,group_helpdesk_user,1,0,0,0
+access_helpdesk_ticket_type_manager,helpdesk.ticket.type.manager,model_helpdesk_ticket_type,group_helpdesk_manager,1,1,1,1
+access_helpdesk_ticket_source_user,helpdesk.ticket.source.user,model_helpdesk_ticket_source,group_helpdesk_user,1,0,0,0
+access_helpdesk_ticket_source_manager,helpdesk.ticket.source.manager,model_helpdesk_ticket_source,group_helpdesk_manager,1,1,1,1
+access_helpdesk_tag_user,helpdesk.tag.user,model_helpdesk_tag,group_helpdesk_user,1,0,0,0
+access_helpdesk_tag_manager,helpdesk.tag.manager,model_helpdesk_tag,group_helpdesk_manager,1,1,1,1
