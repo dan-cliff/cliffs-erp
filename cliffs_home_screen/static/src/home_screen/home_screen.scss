@@ -1,11 +1,11 @@
 .o_cliffs_home_screen {
     height: 100%;
     overflow: auto;
-    padding: 24px 32px;
+    padding: 32px 40px;
     background-color: var(--o-view-background-color, #fff);
 
     .o_cliffs_home_screen_header h2 {
-        margin-bottom: 16px;
+        margin-bottom: 24px;
         font-weight: 500;
     }
 
@@ -15,84 +15,75 @@
 
     .o_cliffs_home_screen_grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 12px;
-        align-items: start;
+        grid-template-columns: repeat(auto-fill, 104px);
+        gap: 20px 16px;
     }
 }
 
-.o_cliffs_menu_node {
-    &.o_cliffs_menu_node_level_0 {
-        border: 1px solid var(--o-gray-300, #dee2e6);
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: var(--o-view-background-color, #fff);
-
-        > .o_cliffs_menu_node_row {
-            padding: 14px 16px;
-            font-weight: 500;
-        }
-
-        &.o_cliffs_menu_node_open > .o_cliffs_menu_node_row {
-            border-bottom: 1px solid var(--o-gray-200, #e9ecef);
-        }
-    }
-
-    &:not(.o_cliffs_menu_node_level_0) {
-        > .o_cliffs_menu_node_row {
-            padding: 8px 12px;
-        }
-
-        > .o_cliffs_menu_node_children {
-            padding-left: 16px;
-        }
-    }
-}
-
-.o_cliffs_menu_node_row {
+.o_cliffs_app_tile {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    width: 104px;
     cursor: pointer;
     user-select: none;
+    text-align: center;
 
-    &:hover {
-        background-color: var(--o-gray-100, #f8f9fa);
+    &:hover .o_cliffs_app_icon,
+    &:focus-visible .o_cliffs_app_icon {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 }
 
-.o_cliffs_menu_node_icon_wrap {
-    width: 28px;
-    height: 28px;
-    flex: 0 0 auto;
+.o_cliffs_app_icon {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: var(--o-gray-100, #f8f9fa);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.o_cliffs_menu_node_icon {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    border-radius: 6px;
+.o_cliffs_app_icon_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.o_cliffs_menu_node_icon_fallback {
-    font-size: 20px;
+.o_cliffs_app_icon_default {
+    display: none;
+    font-size: 30px;
     color: var(--o-brand-primary, #714B67);
 }
 
-.o_cliffs_menu_node_name {
-    flex: 1 1 auto;
+.o_cliffs_app_icon_fallback {
+    .o_cliffs_app_icon_img {
+        display: none;
+    }
+    .o_cliffs_app_icon_default {
+        display: block;
+    }
 }
 
-.o_cliffs_menu_node_caret {
-    font-size: 12px;
-    color: var(--o-gray-500, #adb5bd);
-    flex: 0 0 auto;
+.o_cliffs_app_icon_loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: var(--o-brand-primary, #714B67);
 }
 
-.o_cliffs_menu_node_loading {
-    padding: 8px 12px;
-    color: var(--o-gray-500, #adb5bd);
+.o_cliffs_app_label {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--o-text-color, #212529);
 }
