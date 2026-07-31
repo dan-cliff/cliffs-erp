@@ -1,3 +1,6 @@
+from . import models
+
+
 def _set_home_screen_as_default_action(env):
     action = env.ref('cliffs_home_screen.action_home_screen', raise_if_not_found=False)
     if not action:

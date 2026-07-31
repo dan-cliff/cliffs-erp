@@ -1,8 +1,24 @@
 .o_cliffs_home_screen {
+    position: relative;
+    height: 100%;
+    background-color: var(--o-view-background-color, #fff);
+}
+
+.o_cliffs_home_screen_bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+.o_cliffs_home_screen_content {
+    position: relative;
+    z-index: 1;
     height: 100%;
     overflow: auto;
     padding: 32px 40px;
-    background-color: var(--o-view-background-color, #fff);
 
     .o_cliffs_home_screen_header h2 {
         margin-bottom: 24px;

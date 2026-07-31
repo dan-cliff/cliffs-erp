@@ -11,9 +11,10 @@ app-switcher icon opens this home screen instead of its usual dropdown.
 """,
     'author': 'Cliffs',
     'license': 'LGPL-3',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'base_setup', 'web'],
     'data': [
         'data/home_screen_action.xml',
+        'views/res_config_settings_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
