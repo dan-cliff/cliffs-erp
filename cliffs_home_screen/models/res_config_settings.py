@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
 
     cliffs_home_background_color = fields.Char(
         related='company_id.cliffs_home_background_color', readonly=False)
-    cliffs_home_background_image = fields.Binary(
+    cliffs_home_background_image = fields.Image(
         related='company_id.cliffs_home_background_image', readonly=False)
     cliffs_home_background_opacity = fields.Integer(
         related='company_id.cliffs_home_background_opacity', readonly=False)
