@@ -7,6 +7,10 @@ import { Component, useState } from "@odoo/owl";
 export class CliffsHomeScreen extends Component {
     static template = "cliffs_home_screen.HomeScreen";
     static props = ["*"];
+    // Odoo's own action manager hides the top navbar for fullscreen client
+    // actions (see WebClient's `state.fullscreen`), so it's only shown once
+    // an app is opened from here.
+    static target = "fullscreen";
 
     setup() {
         this.menuService = useService("menu");
