@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="cliffs_barcode_scanner.Launcher">
+        <div class="o_cliffs_barcode_launcher d-flex flex-column justify-content-center align-items-center h-100 gap-2">
+            <i class="fa fa-spin fa-circle-o-notch fa-2x text-muted"/>
+            <span class="text-muted">Opening Barcode Scanner…</span>
+        </div>
+    </t>
+</templates>

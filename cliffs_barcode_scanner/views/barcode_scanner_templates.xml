@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pwa_page" name="Barcode Scanner PWA">
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+        <title>Barcode Scanner</title>
+        <link rel="manifest" href="/barcode_scanner/manifest.webmanifest"/>
+        <meta name="theme-color" content="#714B67"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+        <link rel="apple-touch-icon" href="/cliffs_barcode_scanner/static/description/icon-192.png"/>
+        <link rel="icon" href="/cliffs_barcode_scanner/static/description/icon.png"/>
+        <link rel="stylesheet" href="/cliffs_barcode_scanner/static/src/pwa/pwa.css"/>
+    </head>
+    <body>
+        <div id="barcode_scanner_root"/>
+        <script type="module" src="/cliffs_barcode_scanner/static/src/pwa/app.js"></script>
+    </body>
+</html>
+    </template>
+</odoo>
