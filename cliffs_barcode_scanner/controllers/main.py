@@ -1,8 +1,9 @@
 import json
+import os
 
 from odoo import http
 from odoo.http import request
-from odoo.modules.module import get_module_resource
+from odoo.modules.module import get_module_path
 
 MANIFEST_ICONS = [
     {"src": "/cliffs_barcode_scanner/static/description/icon-192.png", "sizes": "192x192", "type": "image/png"},
@@ -39,7 +40,9 @@ class BarcodeScannerController(http.Controller):
         # Served from a /barcode_scanner/ path (rather than the module's own
         # static/ path) so its default max scope covers the whole PWA and
         # can't reach up into the rest of the Odoo backend.
-        path = get_module_resource('cliffs_barcode_scanner', 'static', 'src', 'pwa', 'service_worker.js')
+        path = os.path.join(
+            get_module_path('cliffs_barcode_scanner'), 'static', 'src', 'pwa', 'service_worker.js'
+        )
         with open(path, 'rb') as f:
             content = f.read()
         return request.make_response(
