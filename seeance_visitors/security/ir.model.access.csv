@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_seeance_visitor_question_user,seeance.visitor.question.user,model_seeance_visitor_question,base.group_user,1,1,1,1

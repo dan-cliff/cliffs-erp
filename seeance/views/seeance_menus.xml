@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seeance_root" name="Seeance" sequence="10"/>
+    <menuitem id="menu_seeance_check_point"
+              name="Check Points"
+              parent="menu_seeance_root"
+              action="seeance_check_point_action"
+              sequence="10"/>
+</odoo>
