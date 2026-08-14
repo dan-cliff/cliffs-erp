@@ -229,8 +229,15 @@
     const statusText = state.online ? 'Online' : 'Offline';
     const outbox = state.outboxCount
       ? `<span class="seeance-outbox-badge">${state.outboxCount} queued</span>` : '';
+    const brand = cp ? `
+        <div class="seeance-brand">
+          <img class="seeance-company-logo" src="${cp.company_logo_url}" alt=""
+               onerror="this.style.visibility='hidden'"/>
+          <span class="seeance-company-name">${escapeHtml(cp.company_name || '')}</span>
+        </div>` : '';
     return `
       <header class="seeance-header">
+        ${brand}
         <div class="seeance-header-title">
           <div class="seeance-cp-name">${escapeHtml(cp ? cp.work_location_name || cp.name : 'Seeance')}</div>
           <div class="seeance-cp-sub">${escapeHtml(cp ? cp.name : '')}</div>
@@ -268,6 +275,20 @@
     });
   }
 
+  const ID_METHODS = [
+    { key: 'pin', flag: 'allow_identification_pin', screen: 'idPin',
+      icon: '🔢', label: 'Enter PIN', instructions: 'Enter your personal PIN on the keypad.' },
+    { key: 'qr', flag: 'allow_identification_qr', screen: 'idQr',
+      icon: '📷', label: 'Scan QR Code', instructions: "Hold your ID card's QR code up to the camera." },
+    { key: 'rfid', flag: 'allow_identification_rfid', screen: 'idRfid',
+      icon: '📶', label: 'Tap RFID Card', instructions: 'Tap or hold your RFID card on the reader.' },
+  ];
+
+  function getEnabledIdMethods() {
+    const cp = state.payload.check_point;
+    return ID_METHODS.filter((m) => cp[m.flag]);
+  }
+
   function renderHome() {
     const people = getPeople();
     const installBtn = state.deferredInstallPrompt
@@ -275,10 +296,23 @@
     const visitorBtn = (state.payload.features.visitor_registration
         && state.payload.check_point.allow_visitor_registration)
       ? '<button id="seeance-visitor-btn" class="seeance-secondary-btn">Register a Visitor</button>' : '';
+    const methods = getEnabledIdMethods();
+    const methodsSection = methods.length ? `
+        <div class="seeance-id-methods">
+          <p class="seeance-instructions">${methods.map((m) => escapeHtml(m.instructions)).join(' · ')}</p>
+          <div class="seeance-id-buttons">
+            ${methods.map((m) => `
+              <button class="seeance-method-btn" data-screen="${m.screen}">
+                <span class="seeance-method-icon">${m.icon}</span>${escapeHtml(m.label)}
+              </button>`).join('')}
+          </div>
+          <p class="seeance-instructions seeance-muted">Or find your name below</p>
+        </div>` : '';
 
     appEl.innerHTML = `
       ${renderBanner()}
       <main class="seeance-main">
+        ${methodsSection}
         <input type="search" id="seeance-search" placeholder="Search your name…"
                value="${escapeHtml(state.search)}" autofocus="autofocus"/>
         <div class="seeance-people">
@@ -306,6 +340,13 @@
         render();
       });
     });
+    appEl.querySelectorAll('.seeance-method-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.error = null;
+        state.screen = btn.dataset.screen;
+        render();
+      });
+    });
     const visitorBtnEl = document.getElementById('seeance-visitor-btn');
     if (visitorBtnEl) visitorBtnEl.addEventListener('click', () => { state.screen = 'visitor'; render(); });
     const installBtnEl = document.getElementById('seeance-install-btn');
@@ -316,6 +357,213 @@
       state.deferredInstallPrompt = null;
       render();
     });
+  }
+
+  // -- Identification: PIN keypad / QR scan / RFID scan ----------------------
+
+  function findPersonByBadgeCode(code) {
+    const list = state.payload.identity_field === 'employee_id'
+      ? (state.payload.employees || []) : (state.payload.users || []);
+    return list.find((p) => p.badge_code && p.badge_code === code) || null;
+  }
+
+  function handleScannedCode(code) {
+    const person = findPersonByBadgeCode(code);
+    if (!person) {
+      state.error = 'Card not recognized.';
+      state.screen = 'home';
+      render();
+      return;
+    }
+    state.selectedPerson = person;
+    state.error = null;
+    state.screen = 'confirm';
+    render();
+  }
+
+  async function submitIdPin(code) {
+    if (!state.online) {
+      state.error = 'PIN sign-in needs an internet connection. Try QR/RFID, or search your name, while offline.';
+      render();
+      return;
+    }
+    try {
+      const res = await postJson('/seeance/kiosk/api/identify_by_pin', { pin: state.pin, code });
+      state.selectedPerson = res.person;
+      state.error = null;
+      state.screen = 'confirm';
+      render();
+    } catch (e) {
+      state.error = e.message || 'PIN not recognized.';
+      render();
+    }
+  }
+
+  function renderIdPin() {
+    appEl.innerHTML = `
+      ${renderBanner()}
+      <main class="seeance-main seeance-centered">
+        <div class="seeance-card seeance-keypad-card">
+          <h2>Enter your PIN</h2>
+          <p class="seeance-instructions">Enter your personal PIN, then press the checkmark.</p>
+          <div class="seeance-pin-display" id="seeance-pin-display">—</div>
+          <div class="seeance-keypad">
+            ${['1', '2', '3', '4', '5', '6', '7', '8', '9', 'clear', '0', 'ok'].map((k) => {
+              if (k === 'clear') return '<button class="seeance-key seeance-key-clear" data-key="clear">⌫</button>';
+              if (k === 'ok') return '<button class="seeance-key seeance-key-ok" data-key="ok">✓</button>';
+              return `<button class="seeance-key" data-key="${k}">${k}</button>`;
+            }).join('')}
+          </div>
+          ${state.error ? `<p class="seeance-error">${escapeHtml(state.error)}</p>` : ''}
+          <button id="seeance-id-cancel" class="seeance-link-btn">Back</button>
+        </div>
+      </main>`;
+
+    let entered = '';
+    const display = document.getElementById('seeance-pin-display');
+    const updateDisplay = () => { display.textContent = entered ? entered.split('').map(() => '•').join(' ') : '—'; };
+    appEl.querySelectorAll('.seeance-key').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const key = btn.dataset.key;
+        if (key === 'clear') {
+          entered = entered.slice(0, -1);
+          updateDisplay();
+        } else if (key === 'ok') {
+          if (!entered) return;
+          await submitIdPin(entered);
+        } else if (entered.length < 8) {
+          entered += key;
+          updateDisplay();
+        }
+      });
+    });
+    document.getElementById('seeance-id-cancel').addEventListener('click', () => {
+      state.error = null;
+      state.screen = 'home';
+      render();
+    });
+  }
+
+  let qrDetectionActive = false;
+
+  function renderIdQr() {
+    appEl.innerHTML = `
+      ${renderBanner()}
+      <main class="seeance-main seeance-centered">
+        <div class="seeance-card seeance-camera-card">
+          <h2>Scan QR Code</h2>
+          <p class="seeance-instructions">Hold your ID card's QR code up to the camera.</p>
+          <div class="seeance-viewport">
+            <video id="seeance-qr-video" playsinline="playsinline" autoplay="autoplay" muted="muted"></video>
+            <div class="seeance-viewport-frame"></div>
+          </div>
+          ${state.error ? `<p class="seeance-error">${escapeHtml(state.error)}</p>` : ''}
+          <button id="seeance-id-cancel" class="seeance-link-btn">Back</button>
+        </div>
+      </main>`;
+    document.getElementById('seeance-id-cancel').addEventListener('click', () => {
+      stopQrScan();
+      state.screen = 'home';
+      render();
+    });
+    startQrScan();
+  }
+
+  async function startQrScan() {
+    const video = document.getElementById('seeance-qr-video');
+    if (!('BarcodeDetector' in window)) {
+      state.error = 'QR scanning is not supported on this device. Try another sign-in method.';
+      render();
+      return;
+    }
+    try {
+      await startCamera(video);
+    } catch (e) {
+      state.error = 'Camera unavailable: ' + e.message;
+      render();
+      return;
+    }
+    const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
+    qrDetectionActive = true;
+    const loop = async () => {
+      if (!qrDetectionActive) return;
+      try {
+        const codes = await detector.detect(video);
+        if (codes.length) {
+          const value = codes[0].rawValue;
+          stopQrScan();
+          handleScannedCode(value);
+          return;
+        }
+      } catch (e) { /* transient decode errors are normal mid-scan, keep looping */ }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  function stopQrScan() {
+    qrDetectionActive = false;
+    stopCamera();
+  }
+
+  let ndefController = null;
+
+  function renderIdRfid() {
+    appEl.innerHTML = `
+      ${renderBanner()}
+      <main class="seeance-main seeance-centered">
+        <div class="seeance-card">
+          <h2>Scan RFID Card</h2>
+          <p class="seeance-instructions">Tap or hold your RFID card on the reader.</p>
+          <div class="seeance-rfid-indicator">📶</div>
+          <input type="text" id="seeance-rfid-input" class="seeance-rfid-hidden-input"
+                 autocomplete="off" inputmode="none" autofocus="autofocus"/>
+          ${state.error ? `<p class="seeance-error">${escapeHtml(state.error)}</p>` : ''}
+          <button id="seeance-id-cancel" class="seeance-link-btn">Back</button>
+        </div>
+      </main>`;
+    const input = document.getElementById('seeance-rfid-input');
+    input.focus();
+    // Most RFID/barcode reader peripherals (built-in or external) behave as a
+    // keyboard "wedge": they type the card code followed by Enter into
+    // whatever input is focused. This works regardless of the specific
+    // hardware, since there's no generic Web RFID API to call directly.
+    input.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') {
+        ev.preventDefault();
+        const value = input.value.trim();
+        input.value = '';
+        if (value) handleScannedCode(value);
+      }
+    });
+    input.addEventListener('blur', () => {
+      if (state.screen === 'idRfid') setTimeout(() => input.focus(), 50);
+    });
+    startNfcScan();
+    document.getElementById('seeance-id-cancel').addEventListener('click', () => {
+      stopNfcScan();
+      state.screen = 'home';
+      render();
+    });
+  }
+
+  async function startNfcScan() {
+    // Best-effort: many RFID-labelled access cards are actually NFC, and
+    // Chrome on Android exposes those via the Web NFC API. Falls back
+    // silently to the keyboard-wedge input above when unavailable.
+    if (!('NDEFReader' in window)) return;
+    try {
+      ndefController = new window.NDEFReader();
+      await ndefController.scan();
+      ndefController.onreading = (event) => {
+        if (state.screen !== 'idRfid') return;
+        if (event.serialNumber) handleScannedCode(event.serialNumber);
+      };
+    } catch (e) { /* NFC not available or permission denied - wedge input still works */ }
+  }
+
+  function stopNfcScan() {
+    ndefController = null;
   }
 
   function renderConfirm() {
@@ -459,6 +707,9 @@
       case 'loading': return renderLoading();
       case 'pin': return renderPinEntry();
       case 'home': return renderHome();
+      case 'idPin': return renderIdPin();
+      case 'idQr': return renderIdQr();
+      case 'idRfid': return renderIdRfid();
       case 'confirm': return renderConfirm();
       case 'camera': return renderCamera();
       case 'visitor': return renderVisitor();

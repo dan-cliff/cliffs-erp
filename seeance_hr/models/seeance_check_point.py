@@ -20,7 +20,17 @@ class SeeanceCheckPoint(models.Model):
         employees = self.env['hr.employee'].sudo().search([
             ('company_id', '=', self.company_id.id), ('active', '=', True)])
         payload['employees'] = [
-            {'id': e.id, 'name': e.name, 'user_id': e.user_id.id}
+            {'id': e.id, 'name': e.name, 'user_id': e.user_id.id,
+             'badge_code': e.seeance_badge_code}
             for e in employees
         ]
         return payload
+
+    def _identify_person_by_pin(self, pin_code):
+        self.ensure_one()
+        employee = self.env['hr.employee'].sudo().search([
+            ('seeance_identification_pin', '=', pin_code),
+            ('company_id', '=', self.company_id.id),
+            ('active', '=', True),
+        ], limit=1)
+        return {'id': employee.id, 'name': employee.name} if employee else None

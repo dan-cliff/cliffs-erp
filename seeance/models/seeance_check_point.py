@@ -30,6 +30,20 @@ class SeeanceCheckPoint(models.Model):
     attendance_ids = fields.One2many(
         'seeance.attendance', 'check_point_id', string='Sign In/Out Records')
 
+    # Identification methods. One or more may be enabled; the manual search-by-name
+    # list is always available regardless, as a baseline fallback.
+    allow_identification_pin = fields.Boolean(
+        string='PIN Code',
+        help='Let a person identify themselves by entering their personal PIN on a keypad.')
+    allow_identification_qr = fields.Boolean(
+        string='QR Code Scanning',
+        help="Let a person identify themselves by holding their ID card's QR code up to the "
+             'front-facing camera.')
+    allow_identification_rfid = fields.Boolean(
+        string='RFID Scanning',
+        help="Let a person identify themselves by scanning their RFID ID card on the device's "
+             'built-in or an externally connected RFID reader.')
+
     # Kiosk / PWA provisioning
     access_pin = fields.Char(
         string='Kiosk PIN', copy=False, readonly=True,
@@ -171,25 +185,52 @@ class SeeanceCheckPoint(models.Model):
             'visitor_registration': False,
         }
 
+    def _identify_person_by_pin(self, pin_code):
+        """Look up who a personal identification PIN belongs to.
+
+        Deliberately done server-side rather than by shipping PIN codes to
+        the kiosk in the offline sync payload: a personal PIN is a secret,
+        unlike a badge_code (which only proves possession of a physical
+        card, comparable to a barcode). This means PIN identification only
+        works while the kiosk is online, by design.
+        """
+        self.ensure_one()
+        user = self.env['res.users'].sudo().search([
+            ('seeance_identification_pin', '=', pin_code),
+            ('company_ids', 'in', [self.company_id.id]),
+            ('active', '=', True),
+        ], limit=1)
+        return {'id': user.id, 'name': user.name} if user else None
+
     def _get_pwa_sync_payload(self):
         self.ensure_one()
         users = self.env['res.users'].sudo().search([
             ('company_ids', 'in', [self.company_id.id]), ('active', '=', True)])
         work_locations = self.env['seeance.work_location'].sudo().search([
             ('company_id', '=', self.company_id.id)])
+        company = self.company_id
         return {
             'check_point': {
                 'id': self.id,
                 'name': self.name,
-                'company_id': self.company_id.id,
-                'company_name': self.company_id.name,
+                'company_id': company.id,
+                'company_name': company.name,
+                'company_logo_url': f'/web/image/res.company/{company.id}/logo',
                 'work_location_id': self.work_location_id.id,
                 'work_location_name': self.work_location_id.name,
                 'capture_photo': self.capture_photo,
+                'allow_identification_pin': self.allow_identification_pin,
+                'allow_identification_qr': self.allow_identification_qr,
+                'allow_identification_rfid': self.allow_identification_rfid,
             },
             'identity_field': self._get_pwa_identity_field(),
             'features': self._get_pwa_features(),
-            'users': [{'id': u.id, 'name': u.name, 'login': u.login} for u in users],
+            # badge_code is safe to cache client-side for offline matching (like a barcode,
+            # it identifies a card, it isn't a secret). Personal PINs are never included here.
+            'users': [
+                {'id': u.id, 'name': u.name, 'login': u.login, 'badge_code': u.seeance_badge_code}
+                for u in users
+            ],
             'work_locations': [{'id': w.id, 'name': w.name} for w in work_locations],
             'server_time': fields.Datetime.to_string(fields.Datetime.now()),
         }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_inherit_seeance" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.seeance</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="seeance" string="Seeance">
+                    <group>
+                        <field name="seeance_identification_pin"/>
+                        <field name="seeance_badge_code"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

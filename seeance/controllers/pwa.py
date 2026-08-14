@@ -168,3 +168,25 @@ class SeeanceKioskController(http.Controller):
 
         record = Attendance.create(vals)
         return self._json_response({'ok': True, 'id': record.id})
+
+    @http.route('/seeance/kiosk/api/identify_by_pin', type='http', auth='public',
+                csrf=False, methods=['POST'])
+    def kiosk_identify_by_pin(self, **kwargs):
+        # Deliberately not part of /api/sync's cached payload: a personal PIN is a
+        # secret, so it's looked up server-side on demand rather than shipped to
+        # the kiosk for offline matching (unlike badge_code, which the kiosk does
+        # cache - see seeance.check_point._get_pwa_sync_payload).
+        body = self._read_json_body()
+        try:
+            check_point = self._get_check_point(body.get('pin'))
+        except AccessDenied as exc:
+            return self._json_response({'ok': False, 'error': str(exc)}, status=403)
+
+        code = (body.get('code') or '').strip()
+        if not code:
+            return self._json_response({'ok': False, 'error': 'Missing PIN.'}, status=400)
+
+        person = check_point._identify_person_by_pin(code)
+        if not person:
+            return self._json_response({'ok': False, 'error': 'PIN not recognized.'}, status=404)
+        return self._json_response({'ok': True, 'person': person})

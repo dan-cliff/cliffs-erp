@@ -57,8 +57,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: cache-first, refresh in the background when possible.
-  if (url.pathname.startsWith('/seeance/static/src/pwa/')) {
+  // Static assets and the company logo (used for in-app branding): cache-first,
+  // refresh in the background when possible, so branding still shows offline.
+  if (url.pathname.startsWith('/seeance/static/src/pwa/')
+      || url.pathname.startsWith('/web/image/res.company/')) {
     event.respondWith(
       caches.match(request).then((cached) => {
         const fetchPromise = fetch(request).then((response) => {

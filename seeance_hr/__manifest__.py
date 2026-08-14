@@ -18,6 +18,7 @@ falls back to identifying people by their Odoo User.
     'depends': ['seeance', 'hr'],
     'data': [
         'views/seeance_attendance_views.xml',
+        'views/hr_employee_views.xml',
     ],
     'installable': True,
     'application': False,

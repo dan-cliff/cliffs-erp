@@ -21,6 +21,7 @@ capable PWA kiosk secured by a unique PIN.
         'views/seeance_attendance_views.xml',
         'views/seeance_menus.xml',
         'views/seeance_pwa_templates.xml',
+        'views/res_users_views.xml',
     ],
     'installable': True,
     'application': True,

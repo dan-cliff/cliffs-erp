@@ -58,6 +58,11 @@
                                            options="{'size': [180, 180]}"/>
                                 </group>
                             </group>
+                            <group name="seeance_check_point_identification" string="Sign-In Methods">
+                                <field name="allow_identification_pin"/>
+                                <field name="allow_identification_qr"/>
+                                <field name="allow_identification_rfid"/>
+                            </group>
                         </page>
                         <page name="status" string="Status">
                             <group>
