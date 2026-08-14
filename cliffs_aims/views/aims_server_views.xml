@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="aims_server_view_list" model="ir.ui.view">
+        <field name="name">aims.server.view.list</field>
+        <field name="model">aims.server</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="cloud_provider_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="aims_server_view_form" model="ir.ui.view">
+        <field name="name">aims.server.view.form</field>
+        <field name="model">aims.server</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="cloud_provider_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="aims_server_view_search" model="ir.ui.view">
+        <field name="name">aims.server.view.search</field>
+        <field name="model">aims.server</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="cloud_provider_id"/>
+                <filter name="group_by_cloud_provider" string="Cloud Provider"
+                        context="{'group_by': 'cloud_provider_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_aims_server" model="ir.actions.act_window">
+        <field name="name">Servers</field>
+        <field name="res_model">aims.server</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

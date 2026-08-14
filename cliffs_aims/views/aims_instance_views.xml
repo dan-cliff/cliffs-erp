@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="aims_instance_view_list" model="ir.ui.view">
+        <field name="name">aims.instance.view.list</field>
+        <field name="model">aims.instance</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="server_id"/>
+                <field name="cloud_provider_id"/>
+                <field name="account_status_id"/>
+                <field name="account_health_id"/>
+                <field name="version"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="aims_instance_view_form" model="ir.ui.view">
+        <field name="name">aims.instance.view.form</field>
+        <field name="model">aims.instance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Instance Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="url" widget="url"/>
+                            <field name="server_id"/>
+                            <field name="cloud_provider_id" readonly="1"/>
+                            <field name="instance_type_id"/>
+                            <field name="version"/>
+                            <field name="tz"/>
+                        </group>
+                        <group>
+                            <field name="subscription_id"/>
+                            <field name="partner_id"/>
+                            <field name="account_status_id"/>
+                            <field name="account_health_id"/>
+                            <field name="account_package_id"/>
+                            <field name="last_backup"/>
+                            <field name="active_user_count"/>
+                            <field name="licenced_user_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Features" name="features">
+                            <div class="o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="feature_sms_enabled" widget="boolean_toggle"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="feature_sms_enabled" string="Enable SMS"/>
+                                    <div class="text-muted">
+                                        Allows integration to the CSS SMS gateway, note this comes at an additional charge and should be included in the subscription plan before activating. Where special allowances are being made, this should be included in the clients contact and SMS still be enabled on the subscription, but at a discounted rate.
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+                        <page string="Subscription" name="subscription"/>
+                        <page string="Contacts" name="contacts"/>
+                        <page string="Administration" name="administration"/>
+                        <page string="Tools" name="tools"/>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="aims_instance_view_search" model="ir.ui.view">
+        <field name="name">aims.instance.view.search</field>
+        <field name="model">aims.instance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="server_id"/>
+                <field name="cloud_provider_id"/>
+                <field name="account_status_id"/>
+                <field name="account_health_id"/>
+                <field name="account_package_id"/>
+                <field name="instance_type_id"/>
+                <filter name="filter_inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_customer" string="Customer" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_cloud_provider" string="Cloud Provider" context="{'group_by': 'cloud_provider_id'}"/>
+                    <filter name="group_by_server" string="Server" context="{'group_by': 'server_id'}"/>
+                    <filter name="group_by_account_status" string="Account Status" context="{'group_by': 'account_status_id'}"/>
+                    <filter name="group_by_account_health" string="Account Health" context="{'group_by': 'account_health_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_aims_instance" model="ir.actions.act_window">
+        <field name="name">Instances</field>
+        <field name="res_model">aims.instance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

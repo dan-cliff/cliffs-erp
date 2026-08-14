@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_aims_cloud_provider_user,aims.cloud.provider.user,model_aims_cloud_provider,base.group_user,1,1,1,1
+access_aims_server_user,aims.server.user,model_aims_server,base.group_user,1,1,1,1
+access_aims_account_status_user,aims.account.status.user,model_aims_account_status,base.group_user,1,1,1,1
+access_aims_account_health_user,aims.account.health.user,model_aims_account_health,base.group_user,1,1,1,1
+access_aims_account_package_user,aims.account.package.user,model_aims_account_package,base.group_user,1,1,1,1
+access_aims_instance_type_user,aims.instance.type.user,model_aims_instance_type,base.group_user,1,1,1,1
+access_aims_instance_user,aims.instance.user,model_aims_instance,base.group_user,1,1,1,1
