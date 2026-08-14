@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="kiosk_shell" name="Seeance Kiosk Shell">
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+    <title>Seeance Kiosk</title>
+    <meta name="theme-color" content="#111827"/>
+    <link rel="manifest" t-attf-href="/seeance/kiosk/#{check_point_id}/manifest.webmanifest?pin=#{pin}"/>
+    <link rel="apple-touch-icon" href="/seeance/static/src/pwa/icons/icon-192.png"/>
+    <link rel="stylesheet" href="/seeance/static/src/pwa/app.css"/>
+</head>
+<body>
+    <div id="app" t-att-data-check-point-id="check_point_id" t-att-data-pin="pin">
+        <div class="seeance-boot">Loading Seeance…</div>
+    </div>
+    <script src="/seeance/static/src/pwa/idb.js"></script>
+    <script src="/seeance/static/src/pwa/app.js"></script>
+</body>
+</html>
+    </template>
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seeance_visitor_registration"
+              name="Visitor Registrations"
+              parent="seeance.menu_seeance_root"
+              action="seeance_visitor_registration_action"
+              sequence="30"/>
+</odoo>

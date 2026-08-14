@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seeance_work_location_view_list" model="ir.ui.view">
+        <field name="name">seeance.work_location.view.list</field>
+        <field name="model">seeance.work_location</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="seeance_work_location_view_form" model="ir.ui.view">
+        <field name="name">seeance.work_location.view.form</field>
+        <field name="model">seeance.work_location</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="seeance_work_location_action" model="ir.actions.act_window">
+        <field name="name">Work Locations</field>
+        <field name="res_model">seeance.work_location</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

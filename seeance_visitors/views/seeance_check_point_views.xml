@@ -5,6 +5,13 @@
         <field name="model">seeance.check_point</field>
         <field name="inherit_id" ref="seeance.seeance_check_point_view_form"/>
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button type="object" name="action_view_visitor_registrations"
+                        class="oe_stat_button" icon="fa-user-plus">
+                    <field name="visitor_registration_count" widget="statinfo"
+                           string="Visitor Registrations"/>
+                </button>
+            </div>
             <group name="seeance_check_point_main" position="after">
                 <group string="Visitors" name="seeance_check_point_visitors">
                     <field name="allow_visitor_registration"/>
@@ -17,6 +24,14 @@
                             <field name="is_required"/>
                         </list>
                     </field>
+                </group>
+            </group>
+            <group name="seeance_check_point_stats_sign_out" position="after">
+                <group name="seeance_check_point_stats_visitors" string="Visitor Registrations">
+                    <field name="visitor_registration_count_today" string="Today"/>
+                    <field name="visitor_registration_count_wtd" string="Week to Date"/>
+                    <field name="visitor_registration_count_mtd" string="Month to Date"/>
+                    <field name="visitor_registration_count_ytd" string="Year to Date"/>
                 </group>
             </group>
         </field>

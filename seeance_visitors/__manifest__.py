@@ -18,6 +18,8 @@ feature only appears, once both apps are installed.
     'data': [
         'security/ir.model.access.csv',
         'views/seeance_check_point_views.xml',
+        'views/seeance_visitor_registration_views.xml',
+        'views/seeance_menus.xml',
     ],
     'installable': True,
     'application': False,

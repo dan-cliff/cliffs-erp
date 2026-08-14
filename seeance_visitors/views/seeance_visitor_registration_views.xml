@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seeance_visitor_registration_view_list" model="ir.ui.view">
+        <field name="name">seeance.visitor.registration.view.list</field>
+        <field name="model">seeance.visitor.registration</field>
+        <field name="arch" type="xml">
+            <list default_order="datetime desc" create="false">
+                <field name="name"/>
+                <field name="datetime"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="work_location_id"/>
+                <field name="check_point_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="seeance_visitor_registration_view_form" model="ir.ui.view">
+        <field name="name">seeance.visitor.registration.view.form</field>
+        <field name="model">seeance.visitor.registration</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="datetime"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="work_location_id"/>
+                            <field name="check_point_id"/>
+                        </group>
+                    </group>
+                    <group string="Photo" invisible="not image">
+                        <field name="image" widget="image" nolabel="1" options="{'size': [0, 300]}"/>
+                    </group>
+                    <group string="Answers">
+                        <field name="answer_ids" nolabel="1" colspan="2">
+                            <list editable="bottom" create="false" delete="false">
+                                <field name="question_id"/>
+                                <field name="answer"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="seeance_visitor_registration_action" model="ir.actions.act_window">
+        <field name="name">Visitor Registrations</field>
+        <field name="res_model">seeance.visitor.registration</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
