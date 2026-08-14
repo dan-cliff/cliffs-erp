@@ -1,0 +1,165 @@
+:root {
+  --seeance-bg: #111827;
+  --seeance-surface: #1f2937;
+  --seeance-accent: #14b8a6;
+  --seeance-text: #f9fafb;
+  --seeance-muted: #9ca3af;
+  --seeance-danger: #ef4444;
+  --seeance-warning: #f59e0b;
+  --seeance-success: #22c55e;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--seeance-bg);
+  color: var(--seeance-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#app { min-height: 100vh; display: flex; flex-direction: column; }
+
+.seeance-boot {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; color: var(--seeance-muted);
+}
+
+.seeance-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.5rem; background: var(--seeance-surface);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seeance-brand { display: flex; align-items: center; gap: 0.5rem; }
+.seeance-company-logo { height: 2rem; max-width: 6rem; object-fit: contain; }
+.seeance-company-name { font-size: 0.85rem; color: var(--seeance-muted); }
+
+.seeance-cp-name { font-size: 1.1rem; font-weight: 600; }
+.seeance-cp-sub { font-size: 0.85rem; color: var(--seeance-muted); }
+
+.seeance-status {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.85rem; padding: 0.3rem 0.7rem; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.seeance-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; }
+.seeance-online .seeance-dot { background: var(--seeance-success); }
+.seeance-offline .seeance-dot { background: var(--seeance-danger); }
+.seeance-outbox-badge {
+  margin-left: 0.4rem; padding: 0.1rem 0.5rem; border-radius: 999px;
+  background: var(--seeance-warning); color: #111827; font-weight: 600;
+}
+
+.seeance-main { flex: 1; display: flex; flex-direction: column; padding: 1.5rem; gap: 1rem; }
+.seeance-centered { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+
+.seeance-card {
+  background: var(--seeance-surface); border-radius: 1rem; padding: 2rem;
+  max-width: 28rem; width: 100%; text-align: center;
+}
+.seeance-card h1 { margin-top: 0; }
+
+#seeance-search, #seeance-pin-input, input[type="text"] {
+  width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.15); background: var(--seeance-surface);
+  color: var(--seeance-text);
+}
+
+.seeance-people {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.75rem; overflow-y: auto;
+}
+.seeance-person {
+  padding: 1.25rem 1rem; font-size: 1.05rem; border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1); background: var(--seeance-surface);
+  color: var(--seeance-text); cursor: pointer;
+}
+.seeance-person:active { background: var(--seeance-accent); color: #111827; }
+.seeance-empty { color: var(--seeance-muted); }
+
+.seeance-footer { display: flex; justify-content: center; gap: 1rem; margin-top: auto; }
+
+.seeance-primary-btn, .seeance-secondary-btn, button[type="submit"] {
+  padding: 1.1rem 1.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 0.75rem;
+  border: none; background: var(--seeance-accent); color: #06201c; cursor: pointer;
+}
+.seeance-mechanism-buttons { display: flex; gap: 1rem; margin: 1.5rem 0; }
+.seeance-mechanism-buttons button { flex: 1; }
+.seeance-sign-out { background: var(--seeance-warning); }
+
+.seeance-secondary-btn {
+  background: transparent; border: 1px solid var(--seeance-accent); color: var(--seeance-accent);
+}
+.seeance-link-btn {
+  background: none; border: none; color: var(--seeance-muted); text-decoration: underline;
+  font-size: 0.95rem; cursor: pointer; margin-top: 1rem;
+}
+
+.seeance-error { color: var(--seeance-danger); }
+
+.seeance-camera-card video {
+  width: 100%; border-radius: 0.75rem; background: #000;
+  transform: scaleX(-1);
+}
+.seeance-camera-actions { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+
+.seeance-done { padding: 3rem 2rem; }
+.seeance-checkmark {
+  font-size: 3rem; color: var(--seeance-success); margin-bottom: 1rem;
+}
+
+form label { display: block; text-align: left; margin-bottom: 1rem; font-size: 0.95rem; }
+form label input { margin-top: 0.35rem; }
+
+.seeance-instructions { color: var(--seeance-muted); font-size: 0.95rem; margin: 0 0 0.75rem; }
+.seeance-instructions.seeance-muted { font-size: 0.85rem; margin-top: 0.75rem; margin-bottom: 0; }
+
+.seeance-id-methods { text-align: center; }
+.seeance-id-buttons {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-bottom: 0.5rem;
+}
+.seeance-method-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  min-width: 8rem; padding: 1.1rem 1.25rem; font-size: 1rem; font-weight: 600;
+  border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--seeance-surface); color: var(--seeance-text); cursor: pointer;
+}
+.seeance-method-btn:active { background: var(--seeance-accent); color: #06201c; }
+.seeance-method-icon { font-size: 1.75rem; }
+
+.seeance-keypad-card { max-width: 20rem; }
+.seeance-pin-display {
+  font-size: 1.75rem; letter-spacing: 0.3rem; margin: 1rem 0; min-height: 2.5rem;
+}
+.seeance-keypad {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+}
+.seeance-key {
+  padding: 1.25rem; font-size: 1.4rem; font-weight: 600; border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12); background: var(--seeance-surface);
+  color: var(--seeance-text); cursor: pointer;
+}
+.seeance-key:active { background: var(--seeance-accent); color: #06201c; }
+.seeance-key-clear { color: var(--seeance-warning); }
+.seeance-key-ok { background: var(--seeance-accent); color: #06201c; }
+
+.seeance-viewport {
+  position: relative; width: 100%; border-radius: 0.75rem; overflow: hidden; background: #000;
+}
+.seeance-viewport video {
+  width: 100%; display: block; transform: scaleX(-1);
+}
+.seeance-viewport-frame {
+  position: absolute; inset: 12%; border: 3px solid var(--seeance-accent);
+  border-radius: 0.75rem; pointer-events: none;
+}
+
+.seeance-rfid-indicator { font-size: 3rem; margin: 1rem 0; color: var(--seeance-accent); }
+.seeance-rfid-hidden-input {
+  opacity: 0; height: 1px; padding: 0; border: none; position: absolute; pointer-events: none;
+}

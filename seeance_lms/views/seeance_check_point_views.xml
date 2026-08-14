@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seeance_check_point_view_form_inherit_lms" model="ir.ui.view">
+        <field name="name">seeance.check_point.view.form.inherit.lms</field>
+        <field name="model">seeance.check_point</field>
+        <field name="inherit_id" ref="seeance.seeance_check_point_view_form"/>
+        <field name="arch" type="xml">
+            <group name="seeance_check_point_main" position="after">
+                <group string="Required Courses" name="seeance_check_point_lms">
+                    <field name="required_course_ids" nolabel="1" widget="many2many_tags"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

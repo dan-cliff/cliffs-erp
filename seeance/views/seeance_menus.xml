@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_seeance_root" name="Seeance" sequence="10"/>
+    <menuitem id="menu_seeance_check_point"
+              name="Check Points"
+              parent="menu_seeance_root"
+              action="seeance_check_point_action"
+              sequence="10"/>
+    <menuitem id="menu_seeance_attendance"
+              name="Sign In/Out Records"
+              parent="menu_seeance_root"
+              action="seeance_attendance_action"
+              sequence="20"/>
+    <menuitem id="menu_seeance_configuration"
+              name="Configuration"
+              parent="menu_seeance_root"
+              sequence="90"/>
+    <menuitem id="menu_seeance_work_location"
+              name="Work Locations"
+              parent="menu_seeance_configuration"
+              action="seeance_work_location_action"
+              sequence="10"/>
+</odoo>

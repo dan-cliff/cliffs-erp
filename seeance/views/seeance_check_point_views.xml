@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seeance_check_point_view_list" model="ir.ui.view">
+        <field name="name">seeance.check_point.view.list</field>
+        <field name="model">seeance.check_point</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="work_location_id"/>
+                <field name="connectivity_status" widget="badge"
+                       invisible="connectivity_status == 'online'"
+                       decoration-warning="connectivity_status == 'warning'"
+                       decoration-danger="connectivity_status == 'danger'"
+                       decoration-muted="connectivity_status == 'never'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="seeance_check_point_view_form" model="ir.ui.view">
+        <field name="name">seeance.check_point.view.form</field>
+        <field name="model">seeance.check_point</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_attendances"
+                                class="oe_stat_button" icon="fa-sign-in">
+                            <field name="attendance_count" widget="statinfo"
+                                   string="Sign In/Out Records"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Main Gate Kiosk"/></h1>
+                    </div>
+                    <group name="seeance_check_point_main">
+                        <group>
+                            <field name="company_id"/>
+                            <field name="work_location_id"/>
+                        </group>
+                        <group>
+                            <field name="capture_photo"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="kiosk" string="Kiosk">
+                            <group>
+                                <group>
+                                    <field name="kiosk_url" widget="url" readonly="1"/>
+                                    <field name="access_pin" readonly="1"/>
+                                    <button name="action_regenerate_access_pin" type="object"
+                                            string="Regenerate PIN" class="btn-link"
+                                            confirm="This invalidates the current kiosk PIN. Any device still using the old PIN will need to be re-provisioned with the new Kiosk URL."/>
+                                </group>
+                                <group>
+                                    <field name="kiosk_qr_code" widget="image" nolabel="1"
+                                           options="{'size': [180, 180]}"/>
+                                </group>
+                            </group>
+                            <group name="seeance_check_point_identification" string="Sign-In Methods">
+                                <field name="allow_identification_pin"/>
+                                <field name="allow_identification_qr"/>
+                                <field name="allow_identification_rfid"/>
+                            </group>
+                        </page>
+                        <page name="status" string="Status">
+                            <group>
+                                <group>
+                                    <field name="connectivity_status" widget="badge"
+                                           decoration-success="connectivity_status == 'online'"
+                                           decoration-warning="connectivity_status == 'warning'"
+                                           decoration-danger="connectivity_status == 'danger'"/>
+                                    <field name="last_seen"/>
+                                </group>
+                                <group>
+                                    <field name="last_ip"/>
+                                    <field name="last_os_info"/>
+                                    <field name="last_connection_type"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="seeance_check_point_statistics" string="Statistics">
+                            <group name="seeance_check_point_stats_sign_in" string="Sign Ins">
+                                <field name="sign_in_count_today" string="Today"/>
+                                <field name="sign_in_count_wtd" string="Week to Date"/>
+                                <field name="sign_in_count_mtd" string="Month to Date"/>
+                                <field name="sign_in_count_ytd" string="Year to Date"/>
+                            </group>
+                            <group name="seeance_check_point_stats_sign_out" string="Sign Outs">
+                                <field name="sign_out_count_today" string="Today"/>
+                                <field name="sign_out_count_wtd" string="Week to Date"/>
+                                <field name="sign_out_count_mtd" string="Month to Date"/>
+                                <field name="sign_out_count_ytd" string="Year to Date"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="seeance_check_point_action" model="ir.actions.act_window">
+        <field name="name">Check Points</field>
+        <field name="res_model">seeance.check_point</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Check Point
+            </p>
+            <p>
+                Check Points are the kiosks where workers sign in and out of a
+                work location.
+            </p>
+        </field>
+    </record>
+</odoo>

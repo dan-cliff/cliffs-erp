@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_seeance_visitor_question_user,seeance.visitor.question.user,model_seeance_visitor_question,base.group_user,1,1,1,1
+access_seeance_visitor_registration_user,seeance.visitor.registration.user,model_seeance_visitor_registration,base.group_user,1,1,1,1
+access_seeance_visitor_registration_answer_user,seeance.visitor.registration.answer.user,model_seeance_visitor_registration_answer,base.group_user,1,1,1,1
