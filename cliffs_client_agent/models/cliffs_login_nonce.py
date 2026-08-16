@@ -7,6 +7,10 @@ class CliffsLoginNonce(models.Model):
 
     nonce = fields.Char(required=True, index=True)
 
+    _sql_constraints = [
+        ('nonce_unique', 'unique(nonce)', 'This login token has already been used.'),
+    ]
+
     @api.autovacuum
     def _gc_expired(self):
         cutoff = fields.Datetime.subtract(fields.Datetime.now(), hours=1)

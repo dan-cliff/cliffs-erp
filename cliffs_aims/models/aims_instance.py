@@ -7,7 +7,7 @@ import xmlrpc.client
 
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -87,6 +87,28 @@ class AimsInstance(models.Model):
         for instance in self:
             if instance.subscription_id.partner_id:
                 instance.partner_id = instance.subscription_id.partner_id
+
+    def write(self, vals):
+        # url/database_name/system_manager_login decide where the stored
+        # API key gets sent by the sync cron. They're ordinary editable
+        # fields on instances with no credential yet, but once a key is
+        # set, changing them is equivalent to redirecting that credential
+        # to a different host - restrict that specifically, without
+        # locking the URL field down for everyone.
+        redirect_fields = {'url', 'database_name', 'system_manager_login'}
+        if redirect_fields & vals.keys() and not self.env.user.has_group(
+                'cliffs_aims.group_instance_credentials'):
+            # sudo(): the acting user may lack read access to the credential
+            # field itself (that's the point of the group restriction) - the
+            # existence check below must not depend on their own visibility
+            # into it, or it would silently never trigger for them.
+            for instance in self.sudo():
+                if instance.system_manager_api_key:
+                    raise AccessError(_(
+                        "Only members of AIMS / Instance Credentials can change the "
+                        "URL, database name or System Manager login on an instance "
+                        "that already has a System Manager API key set."))
+        return super().write(vals)
 
     def action_login_as_system_manager(self):
         self.ensure_one()

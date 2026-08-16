@@ -54,5 +54,13 @@ class CliffsSystemLoginController(http.Controller):
         nonces = env['cliffs.login.nonce'].sudo()
         if nonces.search_count([('nonce', '=', nonce)]):
             return False
-        nonces.create({'nonce': nonce})
+        try:
+            # The unique constraint on `nonce` is the real guard against a
+            # concurrent double-submit race; the search above is just a
+            # fast path. The savepoint contains the failure to just this
+            # insert if someone else's request already won the race.
+            with env.cr.savepoint():
+                nonces.create({'nonce': nonce})
+        except Exception:
+            return False
         return True
