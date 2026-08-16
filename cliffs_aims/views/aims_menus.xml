@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_aims_root" name="AIMS" sequence="10"/>
+
+    <menuitem id="menu_aims_instance"
+              name="Instances"
+              parent="menu_aims_root"
+              action="action_aims_instance"
+              sequence="10"/>
+
+    <menuitem id="menu_aims_configuration"
+              name="Configuration"
+              parent="menu_aims_root"
+              sequence="100"/>
+
+    <menuitem id="menu_aims_cloud_provider"
+              name="Cloud Providers"
+              parent="menu_aims_configuration"
+              action="action_aims_cloud_provider"
+              sequence="10"/>
+
+    <menuitem id="menu_aims_server"
+              name="Servers"
+              parent="menu_aims_configuration"
+              action="action_aims_server"
+              sequence="20"/>
+
+    <menuitem id="menu_aims_account_status"
+              name="Account Statuses"
+              parent="menu_aims_configuration"
+              action="action_aims_account_status"
+              sequence="30"/>
+
+    <menuitem id="menu_aims_account_health"
+              name="Account Health"
+              parent="menu_aims_configuration"
+              action="action_aims_account_health"
+              sequence="40"/>
+
+    <menuitem id="menu_aims_account_package"
+              name="Account Packages"
+              parent="menu_aims_configuration"
+              action="action_aims_account_package"
+              sequence="50"/>
+
+    <menuitem id="menu_aims_instance_type"
+              name="Instance Types"
+              parent="menu_aims_configuration"
+              action="action_aims_instance_type"
+              sequence="60"/>
+</odoo>
