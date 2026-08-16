@@ -1,5 +1,19 @@
-from odoo import api, fields, models
+import hashlib
+import hmac
+import logging
+import secrets
+import time
+import xmlrpc.client
+
+from odoo import _, api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
+
+SYSTEM_MANAGER_LOGIN_DEFAULT = 'system.manager@cliffs.internal'
+LOGIN_TOKEN_TTL = 120
+LOGIN_ROUTE_PATH = '/cliffs/system_login/'
 
 
 class AimsInstance(models.Model):
@@ -36,8 +50,25 @@ class AimsInstance(models.Model):
     tz = fields.Selection(_tz_get, string='Primary Timezone')
     last_backup = fields.Datetime(string='Last Backup')
     active_user_count = fields.Integer(string='Active User Count')
+    active_user_count_updated = fields.Datetime(string='Active User Count Last Synced', readonly=True)
     licenced_user_count = fields.Integer(string='Licenced User Count')
     version = fields.Char(string='Version')
+
+    # System Manager access - used for the "log in as" button and the
+    # nightly active-user-count sync. The instance's own database, over on
+    # its own Cloudpepper-managed server, is what actually holds this
+    # account; these fields just store what AIMS needs to reach it.
+    database_name = fields.Char(
+        string='Database Name',
+        help="Odoo database name on the client instance, used for API access. "
+             "Leave blank if the instance resolves its database automatically "
+             "from the domain.")
+    system_manager_login = fields.Char(
+        string='System Manager Login', default=SYSTEM_MANAGER_LOGIN_DEFAULT)
+    system_manager_api_key = fields.Char(
+        string='System Manager API Key', groups='cliffs_aims.group_instance_credentials')
+    system_manager_token_secret = fields.Char(
+        string='System Manager Login Token Secret', groups='cliffs_aims.group_instance_credentials')
 
     # Features
     feature_sms_enabled = fields.Boolean(
@@ -56,3 +87,58 @@ class AimsInstance(models.Model):
         for instance in self:
             if instance.subscription_id.partner_id:
                 instance.partner_id = instance.subscription_id.partner_id
+
+    def action_login_as_system_manager(self):
+        self.ensure_one()
+        if not self.url:
+            raise UserError(_('Set the instance URL before logging in as System Manager.'))
+        if not self.system_manager_token_secret:
+            raise UserError(_('Set the System Manager login token secret before logging in.'))
+
+        token = self._make_login_token(self.system_manager_token_secret)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'{self.url.rstrip("/")}{LOGIN_ROUTE_PATH}{token}',
+            'target': 'new',
+        }
+
+    @staticmethod
+    def _make_login_token(secret, ttl=LOGIN_TOKEN_TTL):
+        nonce = secrets.token_urlsafe(16)
+        expires_at = int(time.time()) + ttl
+        message = f'{nonce}.{expires_at}'.encode()
+        signature = hmac.new(secret.encode(), message, hashlib.sha256).hexdigest()
+        return f'{nonce}.{expires_at}.{signature}'
+
+    def _cron_sync_active_user_counts(self):
+        instances = self.search([
+            ('url', '!=', False),
+            ('system_manager_api_key', '!=', False),
+        ])
+        for instance in instances:
+            try:
+                instance._sync_active_user_count()
+            except Exception:
+                _logger.exception(
+                    "AIMS: failed to sync active user count for instance %r", instance.name)
+
+    def _sync_active_user_count(self):
+        self.ensure_one()
+        base_url = self.url.rstrip('/')
+        db = self.database_name or ''
+        login = self.system_manager_login or SYSTEM_MANAGER_LOGIN_DEFAULT
+
+        common = xmlrpc.client.ServerProxy(f'{base_url}/xmlrpc/2/common')
+        uid = common.authenticate(db, login, self.system_manager_api_key, {})
+        if not uid:
+            raise UserError(_('Authentication to %s failed.') % base_url)
+
+        models_proxy = xmlrpc.client.ServerProxy(f'{base_url}/xmlrpc/2/object')
+        count = models_proxy.execute_kw(
+            db, uid, self.system_manager_api_key,
+            'res.users', 'search_count', [[('share', '=', False), ('active', '=', True)]],
+        )
+        self.write({
+            'active_user_count': count,
+            'active_user_count_updated': fields.Datetime.now(),
+        })

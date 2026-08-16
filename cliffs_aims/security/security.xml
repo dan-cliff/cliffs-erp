@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_instance_credentials" model="res.groups">
+        <field name="name">AIMS / Instance Credentials</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can view and edit the System Manager API key and login token secret stored on Instance records.</field>
+    </record>
+</odoo>

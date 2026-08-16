@@ -64,7 +64,22 @@
                         </page>
                         <page string="Subscription" name="subscription"/>
                         <page string="Contacts" name="contacts"/>
-                        <page string="Administration" name="administration"/>
+                        <page string="Administration" name="administration">
+                            <button name="action_login_as_system_manager" type="object"
+                                    string="Log in as System Manager" class="btn-primary"
+                                    icon="fa-sign-in"/>
+                            <group>
+                                <group string="System Manager Access">
+                                    <field name="system_manager_login"/>
+                                    <field name="system_manager_api_key" password="True"/>
+                                    <field name="system_manager_token_secret" password="True"/>
+                                </group>
+                                <group string="Monitoring">
+                                    <field name="database_name"/>
+                                    <field name="active_user_count_updated" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
                         <page string="Tools" name="tools"/>
                     </notebook>
                 </sheet>

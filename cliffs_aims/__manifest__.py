@@ -14,6 +14,7 @@ metrics and toggling of per-instance features.
     'license': 'LGPL-3',
     'depends': ['base', 'mail', 'sale_subscription'],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'views/aims_cloud_provider_views.xml',
         'views/aims_server_views.xml',
@@ -23,6 +24,7 @@ metrics and toggling of per-instance features.
         'views/aims_instance_type_views.xml',
         'views/aims_instance_views.xml',
         'views/aims_menus.xml',
+        'data/aims_cron.xml',
     ],
     'installable': True,
     'application': True,
