@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.cliffs.dev.ops</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- General Settings > Integrations: Claude API Key -->
+            <xpath expr="//block[@name='integration']" position="inside">
+                <setting id="claude_api_key_setting" string="Claude API Key"
+                         help="Authentication key used to connect to your Claude AI environment. Validated automatically every night.">
+                    <field name="claude_api_key" password="True"/>
+                    <span class="fa fa-exclamation-triangle text-danger ms-2"
+                          invisible="not claude_api_key_error"
+                          title="The Claude API Key is failing authentication. See the server log for details."/>
+                    <div class="text-danger mt-1" invisible="not claude_api_key_error">
+                        <field name="claude_api_key_error_message" readonly="1" nolabel="1"/>
+                    </div>
+                </setting>
+            </xpath>
+
+            <!-- New "Dev Ops" settings page -->
+            <xpath expr="//form" position="inside">
+                <app data-string="Dev Ops" string="Dev Ops" name="dev_ops_settings">
+                    <block title="Sprint Naming" name="dev_ops_sprint_naming_setting_container">
+                        <setting id="dev_ops_sprint_naming_prompt_setting"
+                                 string="Sprint Naming Prompt"
+                                 help="Prompt documenting how Claude should name new sprints"
+                                 invisible="not claude_api_key">
+                            <field name="dev_ops_sprint_naming_prompt" widget="text" nolabel="1"
+                                   placeholder="e.g. Name each sprint after a famous lighthouse, in alphabetical order..."/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>
