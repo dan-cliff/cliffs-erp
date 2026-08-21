@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root application menu -->
+    <menuitem id="menu_dev_ops_root" name="Dev Ops"
+              action="dev_ops_sprint_action"
+              web_icon="fa fa-rocket,#3C3785,#FFFFFF"
+              sequence="60"/>
+
+    <menuitem id="menu_dev_ops_sprints" name="Sprints"
+              parent="menu_dev_ops_root"
+              action="dev_ops_sprint_action"
+              sequence="10"/>
+
+    <!--
+        Configuration always sits last in the app's menu bar: keep its
+        sequence higher than every other top-level menu added under
+        menu_dev_ops_root, including any added in the future. Any model
+        referenced by a many2one field on this app's models gets its
+        management screen placed here.
+    -->
+    <menuitem id="menu_dev_ops_configuration" name="Configuration"
+              parent="menu_dev_ops_root"
+              sequence="100"/>
+
+    <menuitem id="menu_dev_ops_release_candidates" name="Release Candidates"
+              parent="menu_dev_ops_configuration"
+              action="dev_ops_release_candidate_action"
+              sequence="10"/>
+</odoo>
