@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- wkf.stage — Form View                                             -->
+    <!-- Opened as a dialog from the canvas so the graphical user-filter   -->
+    <!-- builder is available.                                             -->
+    <!-- ================================================================ -->
+    <record id="view_wkf_stage_form" model="ir.ui.view">
+        <field name="name">wkf.stage.form</field>
+        <field name="model">wkf.stage</field>
+        <field name="arch" type="xml">
+            <form string="Workflow Stage">
+                <field name="res_users_model" invisible="1"/>
+                <group>
+                    <group string="Stage">
+                        <field name="workflow_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group string="Role">
+                        <field name="is_initial"/>
+                        <field name="is_final"/>
+                        <field name="allowed_user_count"/>
+                    </group>
+                </group>
+
+                <group string="Allowed Users">
+                    <div class="text-muted mb-2" colspan="2">
+                        <small>
+                            Restricts which users are considered "allowed" while a record
+                            sits in this stage. Use the <strong>Add a condition</strong>
+                            button to build the filter graphically. Leave empty to allow
+                            any user.
+                        </small>
+                    </div>
+                    <field name="user_domain"
+                           widget="domain"
+                           options="{'model': 'res_users_model'}"
+                           nolabel="1"
+                           colspan="2"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wkf_workflow_admin,wkf.workflow admin,model_wkf_workflow,base.group_system,1,1,1,1
+access_wkf_workflow_manager,wkf.workflow manager,model_wkf_workflow,workflow_stages.group_wkf_manager,1,1,1,1
+access_wkf_workflow_user,wkf.workflow user,model_wkf_workflow,workflow_stages.group_wkf_user,1,0,0,0
+access_wkf_stage_admin,wkf.stage admin,model_wkf_stage,base.group_system,1,1,1,1
+access_wkf_stage_manager,wkf.stage manager,model_wkf_stage,workflow_stages.group_wkf_manager,1,1,1,1
+access_wkf_stage_user,wkf.stage user,model_wkf_stage,workflow_stages.group_wkf_user,1,0,0,0
+access_wkf_transition_admin,wkf.transition admin,model_wkf_transition,base.group_system,1,1,1,1
+access_wkf_transition_manager,wkf.transition manager,model_wkf_transition,workflow_stages.group_wkf_manager,1,1,1,1
+access_wkf_transition_user,wkf.transition user,model_wkf_transition,workflow_stages.group_wkf_user,1,0,0,0
+access_wkf_change_stage_wizard,wkf.change.stage.wizard,model_wkf_change_stage_wizard,base.group_user,1,1,1,1
