@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_launch_barcode_scanner" model="ir.actions.client">
+        <field name="name">Barcode Scanner</field>
+        <field name="tag">cliffs_barcode_scanner.launcher</field>
+    </record>
+
+    <menuitem id="menu_barcode_scanner_root"
+              name="Barcode Scanner"
+              action="action_launch_barcode_scanner"
+              sequence="90"
+              groups="stock.group_stock_user"
+              web_icon="cliffs_barcode_scanner,static/description/icon.png"/>
+</odoo>

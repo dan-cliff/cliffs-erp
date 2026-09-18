@@ -1,0 +1,465 @@
+:root {
+    --cbs-primary: #714b67;
+    --cbs-primary-dark: #563650;
+    --cbs-success: #1a7f4e;
+    --cbs-error: #b3261e;
+    --cbs-bg: #f4f2f5;
+    --cbs-surface: #ffffff;
+    --cbs-border: #ddd6da;
+    --cbs-text: #2b2028;
+    --cbs-text-muted: #766873;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--cbs-bg);
+    color: var(--cbs-text);
+}
+
+#barcode_scanner_root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.o_barcode_app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.o_barcode_app_header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+    background: var(--cbs-primary);
+    color: white;
+}
+
+.o_back_button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.75rem;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+}
+
+.o_barcode_app_title {
+    flex: 1 1 auto;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_barcode_app_main {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.o_screen {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+}
+
+.o_loading,
+.o_empty {
+    color: var(--cbs-text-muted);
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.o_error {
+    background: #fbe9e7;
+    color: var(--cbs-error);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.o_cache_notice {
+    background: #fff4e5;
+    color: #7a5200;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* -- Sync status badge -- */
+
+.o_sync_status_badge {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    white-space: nowrap;
+}
+
+.o_sync_dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--cbs-error);
+}
+
+.o_sync_online .o_sync_dot {
+    background: #7bd88f;
+}
+
+.o_sync_offline .o_sync_dot {
+    background: #ffb454;
+}
+
+/* -- Operation types grid -- */
+
+.o_operation_types_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 0.75rem;
+}
+
+.o_operation_type_tile {
+    background: var(--cbs-surface);
+    border: 1px solid var(--cbs-border);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    min-height: 6rem;
+    text-align: center;
+}
+
+.o_operation_type_tile:active {
+    background: var(--cbs-bg);
+}
+
+.o_operation_type_name {
+    font-weight: 600;
+}
+
+.o_operation_type_count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--cbs-primary);
+}
+
+/* -- Picking list -- */
+
+.o_picking_list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.o_picking_row {
+    background: var(--cbs-surface);
+    border: 1px solid var(--cbs-border);
+    border-radius: 0.5rem;
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.o_picking_row_main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.o_picking_name {
+    font-weight: 600;
+}
+
+.o_picking_partner {
+    font-size: 0.85rem;
+    color: var(--cbs-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_picking_state {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--cbs-text-muted);
+    background: var(--cbs-bg);
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+}
+
+/* -- Move / scan list -- */
+
+.o_move_list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 6rem; /* leave room above the fixed scan footer */
+}
+
+.o_move_row {
+    background: var(--cbs-surface);
+    border: 1px solid var(--cbs-border);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.o_move_row.o_move_done {
+    border-color: var(--cbs-success);
+    background: #ecf7f0;
+}
+
+.o_move_info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 8rem;
+}
+
+.o_move_product {
+    font-weight: 600;
+}
+
+.o_move_barcode {
+    font-size: 0.8rem;
+    color: var(--cbs-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.o_move_qty {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.o_qty_btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--cbs-border);
+    background: var(--cbs-surface);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.o_qty_input {
+    width: 4rem;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.4rem;
+    border: 1px solid var(--cbs-border);
+    border-radius: 0.4rem;
+}
+
+.o_qty_demand {
+    color: var(--cbs-text-muted);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* -- Scan footer (scan input + actions), pinned to the bottom -- */
+
+.o_scan_footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--cbs-surface);
+    border-top: 1px solid var(--cbs-border);
+    padding: 0.75rem 1rem;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0 -1rem -1rem;
+}
+
+.o_scan_input {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--cbs-primary);
+    border-radius: 0.5rem;
+}
+
+.o_scan_actions {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.o_camera_button,
+.o_validate_button {
+    flex: 1 1 auto;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.o_camera_button {
+    background: var(--cbs-bg);
+    color: var(--cbs-text);
+    border: 1px solid var(--cbs-border);
+}
+
+.o_validate_button {
+    background: var(--cbs-primary);
+    color: white;
+}
+
+.o_validate_button:active {
+    background: var(--cbs-primary-dark);
+}
+
+.o_scan_flash {
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+}
+
+.o_scan_flash_success {
+    background: #ecf7f0;
+    color: var(--cbs-success);
+}
+
+.o_scan_flash_error {
+    background: #fbe9e7;
+    color: var(--cbs-error);
+}
+
+/* -- Camera scanner dialog -- */
+
+.o_camera_scanner_backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.o_camera_scanner_dialog {
+    background: var(--cbs-surface);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 100%;
+    max-width: 28rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.o_camera_scanner_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+}
+
+.o_camera_scanner_close {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.o_camera_scanner_video {
+    width: 100%;
+    max-height: 60vh;
+    background: black;
+}
+
+.o_camera_scanner_error {
+    padding: 1rem;
+    color: var(--cbs-error);
+    text-align: center;
+}
+
+/* -- Responsive: wider screens (laptop) get a roomier, centered layout -- */
+
+@media (min-width: 48rem) {
+    .o_screen {
+        max-width: 48rem;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .o_scan_footer {
+        max-width: 48rem;
+        margin: 0 auto;
+        border-radius: 0.75rem 0.75rem 0 0;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --cbs-bg: #1c1620;
+        --cbs-surface: #2a212a;
+        --cbs-border: #443a44;
+        --cbs-text: #f1ecf1;
+        --cbs-text-muted: #b8a9b6;
+    }
+
+    .o_error {
+        background: #4a2320;
+    }
+
+    .o_cache_notice {
+        background: #4a3a1a;
+        color: #ffd98a;
+    }
+
+    .o_move_row.o_move_done {
+        background: #16351f;
+    }
+
+    .o_scan_flash_success {
+        background: #16351f;
+    }
+
+    .o_scan_flash_error {
+        background: #4a2320;
+    }
+}
