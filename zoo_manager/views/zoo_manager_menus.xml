@@ -1,0 +1,9 @@
+<odoo>
+    <!-- Top-level app menu. Odoo only shows a root menu on the home screen once it
+         has an action or a visible child menu, so it appears when the first
+         feature's menu is added under it. -->
+    <menuitem id="menu_zoo_manager_root"
+              name="Zoo Manager"
+              web_icon="zoo_manager,static/description/icon.png"
+              sequence="70"/>
+</odoo>
