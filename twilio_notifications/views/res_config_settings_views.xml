@@ -31,7 +31,7 @@
                         </div>
                         <div class="row mt8" id="twilio_notifications_from_name">
                             <label for="twilio_from_name" class="col-lg-3"/>
-                            <field name="twilio_from_name" placeholder="e.g. Bendigo Scouts"/>
+                            <field name="twilio_from_name" placeholder="e.g. Cliffs"/>
                         </div>
                     </div>
                 </setting>
