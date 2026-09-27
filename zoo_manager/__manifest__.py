@@ -14,7 +14,9 @@ Zoo Manager
 * Classes and species, each with a unique Prefix Code (2 letters for a
   class, 3 for a species) suggested from the name. Species carry the
   regulatory Species Code and whether they are included on the annual
-  wildlife return, plus IUCN status and a default diet.
+  wildlife return, plus IUCN status and a default diet. Ships with the
+  classes and species of the Victorian wildlife schedule (species codes
+  and common names), all marked for the annual wildlife return.
 * Diets (food items, quantities and frequency).
 * Feeding rounds: plan feeds per enclosure, mark them fed and record
   how much was eaten.
@@ -32,6 +34,7 @@ Zoo Manager
         'security/zoo_manager_security.xml',
         'security/ir.model.access.csv',
         'data/zoo_manager_sequence.xml',
+        'data/zoo_species_data.xml',
         'views/zoo_species_views.xml',
         'views/zoo_diet_views.xml',
         'views/zoo_enclosure_views.xml',

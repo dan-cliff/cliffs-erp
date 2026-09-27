@@ -58,6 +58,22 @@ class TestZooManager(TransactionCase):
         with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             self.env['zoo.species'].create({'name': 'Duplicate', 'prefix_code': 'QMK'})
 
+    def test_schedule_species_loaded(self):
+        Species = self.env['zoo.species']
+        scheduled = Species.search([('species_code', '!=', False)])
+        self.assertGreaterEqual(len(scheduled), 377)
+        self.assertTrue(all(scheduled.mapped('include_on_annual_return')))
+        self.assertEqual(len(set(scheduled.mapped('prefix_code'))), len(scheduled))
+        emu = self.env.ref('zoo_manager.zoo_species_1')
+        self.assertEqual(emu.name, 'Emu')
+        self.assertEqual(emu.class_id, self.env.ref('zoo_manager.zoo_class_birds'))
+        self.assertEqual(emu.display_name, '[1] Emu')
+        self.assertEqual(Species.name_search('Dromaius')[0][0], emu.id)
+        # Two schedule entries share a common name; the codes tell them apart.
+        self.assertEqual(Species.search_count([('name', '=', 'Blue Bonnet Parrot')]), 2)
+        class_codes = set(self.env['zoo.animal.class'].search([]).mapped('prefix_code'))
+        self.assertTrue(class_codes.issuperset({'AM', 'BI', 'MA', 'RE'}))
+
     def test_animal_class_from_species(self):
         self.assertEqual(self._animal().class_id, self.mammals)
 

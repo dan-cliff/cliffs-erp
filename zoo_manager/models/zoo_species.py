@@ -43,8 +43,23 @@ class ZooSpecies(models.Model):
     animal_count = fields.Integer(compute='_compute_animal_count')
     active = fields.Boolean(default=True)
 
-    _name_uniq = models.Constraint('UNIQUE (name)', 'A species with this name already exists.')
+    # Common names are not unique: the wildlife schedule lists some twice (e.g.
+    # subspecies), told apart by their Species Code.
+    _species_code_uniq = models.Constraint('UNIQUE (species_code)', 'Another species already uses this Species Code.')
     _prefix_code_uniq = models.Constraint('UNIQUE (prefix_code)', 'Another species already uses this Prefix Code.')
+
+    @api.depends('name', 'species_code')
+    def _compute_display_name(self):
+        for species in self:
+            species.display_name = f'[{species.species_code}] {species.name}' if species.species_code else species.name
+
+    @api.model
+    def _search_display_name(self, operator, value):
+        if operator in ('ilike', '=') and isinstance(value, str) and value:
+            return ['|', '|', '|',
+                    ('name', operator, value), ('scientific_name', operator, value),
+                    ('species_code', operator, value), ('prefix_code', operator, value)]
+        return super()._search_display_name(operator, value)
 
     @api.depends('animal_ids')
     def _compute_animal_count(self):
