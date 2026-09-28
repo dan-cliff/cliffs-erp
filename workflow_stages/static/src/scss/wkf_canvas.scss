@@ -1,0 +1,399 @@
+// ── Workflow Stages Canvas — Visual Editor Styles ──────────────────────────
+
+.wkf-canvas-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #F1F5F9;
+    font-family: inherit;
+    user-select: none;
+}
+
+// ── Toolbar ──────────────────────────────────────────────────────────────
+
+.wkf-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #1E293B;
+    color: #F1F5F9;
+    flex-shrink: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+.wkf-toolbar-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #E2E8F0;
+    margin: 0 4px;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wkf-toolbar-sep { flex: 1; }
+
+.wkf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+    background: #334155;
+    color: #CBD5E1;
+    transition: background .15s;
+
+    &:hover { background: #475569; color: #fff; }
+    &:disabled { opacity: .5; cursor: not-allowed; }
+    &.wkf-btn-back { background: #374151; }
+    &.wkf-btn-primary { background: #4F46E5; color: #fff; &:hover { background: #4338CA; } }
+    &.wkf-btn-success { background: #059669; color: #fff; &:hover { background: #047857; } }
+    &.wkf-btn-warning { background: #F59E0B; color: #fff; &:hover { background: #D97706; } }
+    &.wkf-btn-danger  { background: #DC2626; color: #fff; &:hover { background: #B91C1C; } }
+}
+
+// ── Canvas body ──────────────────────────────────────────────────────────
+
+.wkf-canvas-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.wkf-canvas-outer {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+    background:
+        radial-gradient(circle, #CBD5E1 1px, transparent 1px) 0 0 / 28px 28px;
+    background-color: #F8FAFC;
+
+    &:active { cursor: grabbing; }
+}
+
+.wkf-viewport {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6000px;
+    height: 4000px;
+    transform-origin: 0 0;
+}
+
+// ── SVG layer ────────────────────────────────────────────────────────────
+
+.wkf-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.wkf-edge {
+    fill: none;
+    stroke: #4F46E5;
+    stroke-width: 2;
+    cursor: pointer;
+    pointer-events: stroke;
+    transition: stroke .15s;
+
+    &.wkf-edge-backward {
+        stroke: #F59E0B;
+        stroke-dasharray: 6 3;
+    }
+
+    &.wkf-edge-selected {
+        stroke: #111827;
+        stroke-width: 2.5;
+    }
+
+    &.wkf-edge-ghost {
+        stroke: #4F46E5;
+        stroke-dasharray: 6 3;
+        opacity: .6;
+        pointer-events: none;
+    }
+}
+
+.wkf-edge-label {
+    font-size: 11px;
+    fill: #4F46E5;
+    text-anchor: middle;
+    pointer-events: none;
+    font-weight: 600;
+
+    &.wkf-edge-label-backward { fill: #B45309; }
+}
+
+// ── Nodes ────────────────────────────────────────────────────────────────
+
+.wkf-node {
+    position: absolute;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    border: 2px solid transparent;
+    transition: box-shadow .15s, border-color .15s;
+    min-height: 80px;
+
+    &:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,.18);
+    }
+
+    &.wkf-node-selected {
+        border-color: #4F46E5;
+        box-shadow: 0 0 0 3px rgba(79,70,229,.2);
+    }
+
+    &.wkf-node-initial::before {
+        content: 'INITIAL';
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #059669;
+    }
+
+    &.wkf-node-final::after {
+        content: 'FINAL';
+        position: absolute;
+        bottom: -18px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #DC2626;
+    }
+}
+
+.wkf-node-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border-radius: 8px 8px 0 0;
+    background: #4F46E5;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: move;
+    min-height: 40px;
+
+    .fa { font-size: 14px; flex-shrink: 0; }
+}
+
+.wkf-node-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+.wkf-node-body {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 8px;
+}
+
+.wkf-node-type {
+    font-size: 11px;
+    color: #64748B;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.wkf-node-badge {
+    font-size: 10px;
+    &.wkf-badge-initial { color: #059669; }
+    &.wkf-badge-final   { color: #DC2626; }
+}
+
+.wkf-node-del {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: #EF4444;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+
+    .wkf-node:hover & { display: flex; }
+}
+
+.wkf-node-dup {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: #4F46E5;
+    color: #fff;
+    font-size: 10px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+
+    .wkf-node:hover & { display: flex; }
+    &:hover { background: #4338CA; }
+}
+
+// ── Ports ────────────────────────────────────────────────────────────────
+
+.wkf-port {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #94A3B8;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    transition: border-color .15s, transform .15s;
+
+    &:hover {
+        border-color: #4F46E5;
+        transform: translateY(-50%) scale(1.3);
+    }
+}
+
+.wkf-port-in {
+    left: -7px;
+    cursor: crosshair;
+}
+
+.wkf-port-out {
+    right: -7px;
+    cursor: crosshair;
+    background: #4F46E5;
+    border-color: #4F46E5;
+
+    &:hover { background: #4338CA; border-color: #4338CA; }
+}
+
+// ── Empty state ──────────────────────────────────────────────────────────
+
+.wkf-empty-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #94A3B8;
+    pointer-events: none;
+
+    .fa { margin-bottom: 16px; }
+    p { font-size: 14px; margin: 0; }
+}
+
+.wkf-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #94A3B8;
+}
+
+// ── Properties panel ─────────────────────────────────────────────────────
+
+.wkf-props {
+    width: 280px;
+    flex-shrink: 0;
+    background: #fff;
+    border-left: 1px solid #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.wkf-props-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px;
+    border-bottom: 1px solid #F1F5F9;
+
+    .fa { margin-top: 2px; }
+
+    .wkf-props-title {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        strong { font-size: 14px; color: #1E293B; }
+        small  { font-size: 11px; color: #64748B; }
+    }
+}
+
+.wkf-props-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.wkf-props-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    label { color: #64748B; }
+    span  { color: #1E293B; font-weight: 500; }
+}
+
+.wkf-props-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    label { font-size: 12px; color: #64748B; font-weight: 500; }
+}
+
+.wkf-direction-toggle {
+    display: flex;
+    gap: 6px;
+
+    .wkf-btn { flex: 1; justify-content: center; }
+}
+
+.wkf-props-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+
+    .wkf-btn { flex: 1; justify-content: center; }
+    .wkf-btn-danger { flex: 0 0 auto; }
+}
+
+.wkf-btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
+}

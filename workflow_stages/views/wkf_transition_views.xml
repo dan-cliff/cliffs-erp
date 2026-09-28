@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- wkf.transition — Form View                                        -->
+    <!-- Opened as a dialog from the canvas so the graphical domain/user   -->
+    <!-- filter builders are available.                                    -->
+    <!-- ================================================================ -->
+    <record id="view_wkf_transition_form" model="ir.ui.view">
+        <field name="name">wkf.transition.form</field>
+        <field name="model">wkf.transition</field>
+        <field name="arch" type="xml">
+            <form string="Workflow Transition">
+                <!-- Invisible helpers for the domain widgets below -->
+                <field name="workflow_model_name" invisible="1"/>
+                <field name="res_users_model" invisible="1"/>
+
+                <group>
+                    <group string="Connection">
+                        <field name="from_stage_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="to_stage_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="direction" widget="radio"/>
+                    </group>
+                    <group string="Availability">
+                        <field name="allow_manual"/>
+                        <field name="allow_automatic"/>
+                    </group>
+                </group>
+
+                <group string="Record Condition">
+                    <field name="record_condition_type"/>
+                </group>
+
+                <group invisible="record_condition_type != 'domain'">
+                    <div class="text-muted mb-2" colspan="2">
+                        <small>
+                            This transition is only available when the record matches the
+                            filter below. Use the <strong>Add a condition</strong> button to
+                            build it graphically — no manual expression needed.
+                        </small>
+                    </div>
+                    <field name="record_condition_domain"
+                           widget="domain"
+                           options="{'model': 'workflow_model_name'}"
+                           nolabel="1"
+                           colspan="2"/>
+                </group>
+
+                <group invisible="record_condition_type != 'python'">
+                    <div class="text-muted mb-2" colspan="2">
+                        <small>
+                            A Python expression that must return <code>True</code> for this
+                            transition to be available. Available variables:
+                            <code>record</code>, <code>env</code>, <code>user</code>.
+                        </small>
+                    </div>
+                    <field name="record_condition_python"
+                           widget="ace"
+                           options="{'mode': 'python'}"
+                           nolabel="1"
+                           colspan="2"/>
+                </group>
+
+                <group string="Who May Trigger Manually">
+                    <field name="user_restriction_type"/>
+                </group>
+
+                <group invisible="user_restriction_type != 'domain'">
+                    <div class="text-muted mb-2" colspan="2">
+                        <small>
+                            Only users matching this filter may manually apply this
+                            transition through the "Change Stage" action.
+                        </small>
+                    </div>
+                    <field name="user_domain"
+                           widget="domain"
+                           options="{'model': 'res_users_model'}"
+                           nolabel="1"
+                           colspan="2"/>
+                </group>
+
+                <div class="alert alert-info"
+                     invisible="user_restriction_type != 'stage_users'"
+                     role="alert">
+                    <i class="fa fa-info-circle me-2"/>
+                    Only users matching the <strong>origin stage's</strong> Allowed Users
+                    filter may manually apply this transition.
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

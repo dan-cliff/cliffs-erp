@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="workflow_stages.WorkflowStagesCanvasAction">
+  <div class="wkf-canvas-app">
+
+    <!-- ── Toolbar ────────────────────────────────────────────────────── -->
+    <div class="wkf-toolbar">
+      <button class="wkf-btn wkf-btn-back" t-on-click="goBack">
+        <i class="fa fa-arrow-left"/> Back
+      </button>
+      <span class="wkf-toolbar-title" t-esc="state.workflowName"/>
+      <div class="wkf-toolbar-sep"/>
+
+      <button class="wkf-btn wkf-btn-primary" t-on-click="addStage">
+        <i class="fa fa-plus"/> Add Stage
+      </button>
+
+      <button class="wkf-btn" t-on-click="zoomIn"       title="Zoom In"><i class="fa fa-search-plus"/></button>
+      <button class="wkf-btn" t-on-click="zoomOut"      title="Zoom Out"><i class="fa fa-search-minus"/></button>
+      <button class="wkf-btn" t-on-click="fitView"      title="Fit View"><i class="fa fa-expand"/></button>
+      <button class="wkf-btn" t-on-click="autoLayoutAll" title="Auto-arrange nodes"><i class="fa fa-magic"/> Auto-layout</button>
+      <button class="wkf-btn wkf-btn-success" t-on-click="saveLayout" t-att-disabled="state.saving">
+        <i class="fa fa-save"/> Save Layout
+      </button>
+    </div>
+
+    <!-- ── Body ───────────────────────────────────────────────────────── -->
+    <div class="wkf-canvas-body">
+
+      <!-- Canvas area -->
+      <div class="wkf-canvas-outer"
+           ref="canvasOuter"
+           t-on-wheel.prevent="onWheel"
+           t-on-mousedown="onCanvasMousedown">
+
+        <t t-if="state.loading">
+          <div class="wkf-loading"><i class="fa fa-spinner fa-spin fa-2x"/></div>
+        </t>
+        <t t-else="">
+          <div class="wkf-viewport" t-att-style="viewportStyle">
+
+            <!-- SVG transition layer -->
+            <svg class="wkf-svg" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+              <defs>
+                <marker id="wkf-arrow-fwd" markerWidth="10" markerHeight="7"
+                        refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0,10 3.5,0 7" fill="#4F46E5"/>
+                </marker>
+                <marker id="wkf-arrow-bwd" markerWidth="10" markerHeight="7"
+                        refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0,10 3.5,0 7" fill="#F59E0B"/>
+                </marker>
+                <marker id="wkf-arrow-sel" markerWidth="10" markerHeight="7"
+                        refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0,10 3.5,0 7" fill="#111827"/>
+                </marker>
+              </defs>
+
+              <!-- Existing transitions -->
+              <t t-foreach="state.transitions" t-as="conn" t-key="conn.id">
+                <t t-set="cp" t-value="transitionPath(conn)"/>
+                <t t-if="cp">
+                  <!-- Wide invisible hit area for easier clicking -->
+                  <path t-att-d="cp.d"
+                        fill="none" stroke="transparent" stroke-width="16"
+                        style="cursor:pointer;"
+                        t-on-click="() => this.selectTransition(conn.id)"/>
+                  <!-- Visible path -->
+                  <path t-att-d="cp.d"
+                        class="wkf-edge"
+                        t-att-class="{'wkf-edge-selected':  state.selectedTransitionId === conn.id,
+                                      'wkf-edge-backward':  conn.direction === 'backward'}"
+                        t-att-marker-end="state.selectedTransitionId === conn.id
+                                          ? 'url(#wkf-arrow-sel)'
+                                          : (conn.direction === 'backward' ? 'url(#wkf-arrow-bwd)' : 'url(#wkf-arrow-fwd)')"
+                        t-on-click="() => this.selectTransition(conn.id)"/>
+                  <!-- Label — name + direction arrow -->
+                  <text t-att-x="cp.labelX" t-att-y="cp.labelY"
+                        class="wkf-edge-label"
+                        t-att-class="{'wkf-edge-label-backward': conn.direction === 'backward'}">
+                    <t t-esc="(conn.direction === 'backward' ? '← ' : '→ ') + conn.name"/>
+                  </text>
+                </t>
+              </t>
+
+              <!-- Ghost line while drawing a new transition -->
+              <t t-if="state._connecting">
+                <path t-att-d="ghostPath()" class="wkf-edge wkf-edge-ghost"/>
+              </t>
+            </svg>
+
+            <!-- Stage nodes -->
+            <t t-foreach="state.stages" t-as="stage" t-key="stage.id">
+              <div class="wkf-node"
+                   t-att-class="{
+                     'wkf-node-selected': state.selectedStageId === stage.id,
+                     'wkf-node-initial':  stage.is_initial,
+                     'wkf-node-final':    stage.is_final,
+                   }"
+                   t-att-style="nodeStyle(stage)"
+                   t-on-click.stop="() => {
+                     this.state.selectedStageId = stage.id;
+                     this.state.selectedTransitionId = null;
+                     this.state.editingTransition = null;
+                   }">
+
+                <!-- Input port -->
+                <div class="wkf-port wkf-port-in"
+                     title="Drop transition here"
+                     t-on-mouseup.stop="(ev) => this.onInputPortMouseup(ev, stage.id)"/>
+
+                <!-- Header — drag handle + double-click to edit -->
+                <div class="wkf-node-header"
+                     t-on-mousedown.stop="(ev) => this.onNodeMousedown(ev, stage)"
+                     t-on-dblclick.stop="() => this.editStage(stage.id)">
+                  <i class="fa fa-circle-o"/>
+                  <span class="wkf-node-name" t-esc="stage.name"/>
+                </div>
+
+                <!-- Body -->
+                <div class="wkf-node-body">
+                  <span class="wkf-node-type">
+                    <i class="fa fa-users"/> <t t-esc="stage.allowed_user_count"/>
+                  </span>
+                  <span t-if="stage.is_initial" class="wkf-node-badge wkf-badge-initial" title="Initial stage">
+                    <i class="fa fa-play"/>
+                  </span>
+                  <span t-if="stage.is_final" class="wkf-node-badge wkf-badge-final" title="Final stage">
+                    <i class="fa fa-flag-checkered"/>
+                  </span>
+                </div>
+
+                <!-- Output port — drag to connect -->
+                <div class="wkf-port wkf-port-out"
+                     title="Drag to connect to another stage"
+                     t-on-mousedown.stop="(ev) => this.onOutputPortMousedown(ev, stage.id)"/>
+
+                <!-- Duplicate button (shown on hover, top-left) -->
+                <button class="wkf-node-dup" title="Duplicate stage"
+                        t-on-click.stop="() => this.duplicateStage(stage.id)">
+                  <i class="fa fa-copy"/>
+                </button>
+
+                <!-- Delete button (shown on hover, top-right) -->
+                <button class="wkf-node-del" title="Delete stage"
+                        t-on-click.stop="() => this.deleteStage(stage.id)">×</button>
+              </div>
+            </t>
+
+            <!-- Empty-state hint -->
+            <t t-if="!state.stages.length">
+              <div class="wkf-empty-canvas">
+                <i class="fa fa-sitemap fa-3x"/>
+                <p>No stages yet — click <strong>Add Stage</strong> to begin</p>
+              </div>
+            </t>
+          </div>
+        </t>
+      </div>
+
+      <!-- ── Properties panel ─────────────────────────────────────────── -->
+      <div t-if="state.selectedStageId or state.selectedTransitionId" class="wkf-props">
+
+        <!-- Stage properties -->
+        <t t-if="state.selectedStageId">
+          <t t-set="sel" t-value="getSelectedStage()"/>
+          <t t-if="sel">
+            <div class="wkf-props-header">
+              <i class="fa fa-lg fa-circle-o" style="color:#4F46E5"/>
+              <div class="wkf-props-title">
+                <strong t-esc="sel.name"/>
+                <small>Workflow Stage</small>
+              </div>
+            </div>
+            <div class="wkf-props-body">
+              <div class="wkf-props-row">
+                <label>Allowed Users</label>
+                <span t-esc="sel.allowed_user_count"/>
+              </div>
+              <div class="wkf-props-row">
+                <label>Initial</label>
+                <span t-esc="sel.is_initial ? 'Yes' : 'No'"/>
+              </div>
+              <div class="wkf-props-row">
+                <label>Final</label>
+                <span t-esc="sel.is_final ? 'Yes' : 'No'"/>
+              </div>
+              <div class="wkf-props-actions">
+                <button class="wkf-btn wkf-btn-primary" t-on-click="() => this.editStage(sel.id)">
+                  <i class="fa fa-edit"/> Edit Details
+                </button>
+                <button class="wkf-btn" title="Duplicate stage"
+                        t-on-click="() => this.duplicateStage(sel.id)">
+                  <i class="fa fa-copy"/> Duplicate
+                </button>
+                <button class="wkf-btn wkf-btn-danger" t-on-click="() => this.deleteStage(sel.id)">
+                  <i class="fa fa-trash"/>
+                </button>
+              </div>
+            </div>
+          </t>
+        </t>
+
+        <!-- Transition properties -->
+        <t t-if="state.selectedTransitionId">
+          <t t-set="ec" t-value="getSelectedTransition()"/>
+          <t t-if="ec">
+            <div class="wkf-props-header"
+                 t-att-style="'border-left:4px solid ' + (ec.direction === 'backward' ? '#F59E0B' : '#4F46E5')">
+              <i t-att-class="'fa fa-lg ' + (ec.direction === 'backward' ? 'fa-arrow-left' : 'fa-arrow-right')"
+                 t-att-style="'color:' + (ec.direction === 'backward' ? '#F59E0B' : '#4F46E5')"/>
+              <div class="wkf-props-title">
+                <strong t-esc="ec.name"/>
+                <small>Workflow Transition</small>
+              </div>
+            </div>
+            <div class="wkf-props-body">
+              <div class="wkf-props-field">
+                <label>Direction</label>
+                <div class="wkf-direction-toggle">
+                  <button class="wkf-btn wkf-btn-sm"
+                          t-att-class="{'wkf-btn-primary': ec.direction === 'forward'}"
+                          t-on-click="() => this.setDirection('forward')">
+                    <i class="fa fa-arrow-right"/> Forward
+                  </button>
+                  <button class="wkf-btn wkf-btn-sm"
+                          t-att-class="{'wkf-btn-warning': ec.direction === 'backward'}"
+                          t-on-click="() => this.setDirection('backward')">
+                    <i class="fa fa-arrow-left"/> Backward
+                  </button>
+                </div>
+              </div>
+              <div class="wkf-props-row">
+                <label>Manual</label>
+                <span t-esc="ec.allow_manual ? 'Allowed' : 'Blocked'"/>
+              </div>
+              <div class="wkf-props-row">
+                <label>Automatic</label>
+                <span t-esc="ec.allow_automatic ? 'Allowed' : 'Blocked'"/>
+              </div>
+              <div class="wkf-props-row">
+                <label>Condition</label>
+                <span t-esc="ec.record_condition_type === 'none' ? 'None' : ec.record_condition_type"/>
+              </div>
+              <div class="wkf-props-actions">
+                <button class="wkf-btn wkf-btn-primary" t-on-click="() => this.editTransition(ec.id)">
+                  <i class="fa fa-edit"/> Edit Details
+                </button>
+                <button class="wkf-btn wkf-btn-danger" t-on-click="() => this.deleteTransition(ec.id)">
+                  <i class="fa fa-trash"/>
+                </button>
+              </div>
+            </div>
+          </t>
+        </t>
+      </div>
+    </div>
+  </div>
+</t>
+
+</templates>

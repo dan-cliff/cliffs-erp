@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_wkf_app_root"
+        name="Workflow Designer"
+        sequence="91"
+        groups="workflow_stages.group_wkf_user"/>
+
+    <menuitem
+        id="menu_wkf_workflows"
+        name="Workflows"
+        parent="menu_wkf_app_root"
+        action="action_wkf_workflow"
+        sequence="10"
+        groups="workflow_stages.group_wkf_user"/>
+
+    <!-- Also under Settings > Technical for sysadmins in developer mode -->
+    <menuitem
+        id="menu_wkf_root_technical"
+        name="Workflow Designer"
+        parent="base.menu_administration"
+        sequence="51"
+        groups="base.group_system"/>
+
+    <menuitem
+        id="menu_wkf_workflows_technical"
+        name="Workflows"
+        parent="menu_wkf_root_technical"
+        action="action_wkf_workflow"
+        sequence="10"
+        groups="base.group_system"/>
+
+</odoo>
